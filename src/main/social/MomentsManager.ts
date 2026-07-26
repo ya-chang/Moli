@@ -4,6 +4,7 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs'
 import { join } from 'path'
 import { logger } from '../utils/logger'
+import { PATHS } from '../utils/dataPath'
 
 export interface Moment {
   id: string
@@ -24,7 +25,7 @@ export interface MomentComment {
   createdAt: string
 }
 
-const DATA_DIR = join(process.cwd(), 'data', 'moments')
+const DATA_DIR = PATHS.moments
 
 export class MomentsManager {
   private moments: Moment[] = []

@@ -6,13 +6,11 @@ import { join } from 'path'
 import { app } from 'electron'
 import { parse as parseYaml } from 'yaml'
 import type { ModelConfig } from '../../shared/types'
+import { PATHS } from './dataPath'
 
-// 数据根目录：开发模式用项目根，打包后用 app.getPath('userData')
+// 数据根目录：直接用 PATHS.base 统一路径
 const getDataRoot = (): string => {
-  if (app.isPackaged) {
-    return join(app.getPath('userData'), 'data')
-  }
-  return join(process.cwd(), 'data')
+  return PATHS.base
 }
 
 /**
@@ -104,11 +102,7 @@ export interface ModelsConfig {
   }
 }
 
-let cachedConfig: ModelsConfig | null = null
-
 export const loadModelsConfig = (): ModelsConfig => {
-  if (cachedConfig) return cachedConfig
-
   const configPath = join(getDataRoot(), 'global', 'models.yaml')
 
   if (!existsSync(configPath)) {
@@ -123,7 +117,6 @@ export const loadModelsConfig = (): ModelsConfig => {
     provider.apiKey = resolveEnvValue(provider.apiKey)
   }
 
-  cachedConfig = raw
   return raw
 }
 

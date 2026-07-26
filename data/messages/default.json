@@ -1,0 +1,37 @@
+[
+  {
+    "id": "proactive_1784818753802",
+    "role": "assistant",
+    "content": "晚安啦 🌙",
+    "timestamp": "2026-07-23T14:59:13.802Z",
+    "type": "proactive"
+  },
+  {
+    "id": "proactive_1784818976884",
+    "role": "assistant",
+    "content": "该睡觉了 💤",
+    "timestamp": "2026-07-23T15:02:56.884Z",
+    "type": "proactive"
+  },
+  {
+    "id": "proactive_1784819315056",
+    "role": "assistant",
+    "content": "该睡觉了 💤",
+    "timestamp": "2026-07-23T15:08:35.056Z",
+    "type": "proactive"
+  },
+  {
+    "id": "proactive_1784820144711",
+    "role": "assistant",
+    "content": "晚安 梦里见 ✨",
+    "timestamp": 1784820144711,
+    "type": "proactive"
+  },
+  {
+    "id": "proactive_1784820674655",
+    "role": "assistant",
+    "content": "该睡觉了 💤",
+    "timestamp": 1784820674655,
+    "type": "proactive"
+  }
+]

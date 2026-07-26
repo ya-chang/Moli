@@ -335,3 +335,118 @@
   border-color: var(--primary-color);
   color: var(--primary-color);
 }
+
+/* 通知弹窗设置 */
+.settings-subsection {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-color);
+}
+
+.settings-subsection h5 {
+  margin: 0 0 12px 0;
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.settings-label {
+  min-width: 80px;
+  font-size: var(--font-size-sm);
+  color: var(--text-primary);
+}
+
+.settings-input-sm {
+  width: 80px;
+  padding: 6px 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: var(--font-size-sm);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  outline: none;
+}
+
+.settings-input-sm:focus {
+  border-color: var(--primary-color);
+}
+
+.settings-unit {
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+}
+
+.settings-color-input {
+  width: 40px;
+  height: 32px;
+  padding: 2px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  background: var(--bg-secondary);
+}
+
+.settings-color-input:focus {
+  border-color: var(--primary-color);
+}
+
+.settings-toggle {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 22px;
+  cursor: pointer;
+}
+
+.settings-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.settings-toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: var(--border-color);
+  border-radius: 22px;
+  transition: 0.3s;
+}
+
+.settings-toggle-slider::before {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  left: 2px;
+  bottom: 2px;
+  background: white;
+  border-radius: 50%;
+  transition: 0.3s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.settings-toggle input:checked + .settings-toggle-slider {
+  background: var(--primary-color);
+}
+
+.settings-toggle input:checked + .settings-toggle-slider::before {
+  transform: translateX(18px);
+}
+
+/* 时间输入 */
+.settings-time-input {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.settings-time-input span {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}

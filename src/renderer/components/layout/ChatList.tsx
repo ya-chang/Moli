@@ -1,4 +1,4 @@
-﻿// src/renderer/components/layout/ChatList.tsx
+// src/renderer/components/layout/ChatList.tsx
 // 中间聊天列表 — 搜索 + 对话列表 + 新建对象对话框
 
 import { useState, useCallback, useEffect, useRef } from 'react'
@@ -345,6 +345,7 @@ function CreateCharacterOverlay({ onClose, onCreated }: {
     if (!name.trim() || isCreating) return
     setIsCreating(true)
     try {
+      // 如果是自定义头像（base64），先用占位符创建角色，再保存图片
       const avatarValue = avatar.startsWith('data:') ? '🌸' : avatar
       const persona = buildPersona()
 
@@ -364,30 +365,19 @@ function CreateCharacterOverlay({ onClose, onCreated }: {
       if (result && typeof result === 'object' && 'id' in result) {
         const charResult = result as { id: string; name: string; avatar: string }
 
+        // 如果是自定义头像，保存到后端文件系统
         if (avatar.startsWith('data:')) {
-          try { localStorage.setItem(`char-avatar-${charResult.id}`, avatar) } catch { /* ignore */ }
+          window.electronAPI?.invoke('avatar:save', { id: charResult.id, dataUrl: avatar })
+          // 更新角色配置中的 avatar 字段为 data URL
+          window.electronAPI?.invoke('character:update', {
+            id: charResult.id,
+            updates: { avatar }
+          })
         }
 
-        try {
-          localStorage.setItem(`char-data-${charResult.id}`, JSON.stringify({
-            id: charResult.id,
-            name: charResult.name,
-            avatar: avatarValue,
-            template: selectedTemplate,
-            traits,
-            catchphrase,
-            speechStyle,
-            background,
-            customPersona,
-            persona,
-            provider,
-            model,
-            apiKey,
-            baseUrl: BASE_URL_MAP[provider]
-          }))
-        } catch { /* ignore */ }
+        // 所有数据已保存到后端
 
-        onCreated({ ...charResult, avatar: avatarValue })
+        onCreated({ ...charResult, avatar: avatar.startsWith('data:') ? avatar : avatarValue })
       }
     } finally {
       setIsCreating(false)

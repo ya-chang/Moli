@@ -4,6 +4,7 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs'
 import { join } from 'path'
 import { MemoryGrader, type MemoryGrade } from './MemoryGrader'
+import { PATHS } from '../utils/dataPath'
 
 export interface LongTermMemory {
   id: string
@@ -13,7 +14,7 @@ export interface LongTermMemory {
   createdAt: string
 }
 
-const DATA_DIR = join(process.cwd(), 'data', 'memories')
+const DATA_DIR = PATHS.memories
 
 export class LongTerm {
   private memories: LongTermMemory[] = []

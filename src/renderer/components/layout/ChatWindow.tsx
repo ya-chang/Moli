@@ -5,11 +5,14 @@ import { useState, useCallback, useRef, useEffect, useMemo } from 'react'
 import { MessageBubble } from '../chat/MessageBubble'
 import { InputArea } from '../chat/InputArea'
 import { TitleBar } from './TitleBar'
+import { NowPlaying } from '../music/NowPlaying'
 import { SearchBar } from '../search/SearchBar'
 import { useChatStore } from '../../stores/chatStore'
 import { useChatSessionStore } from '../../stores/chatSessionStore'
 import { useChatBgStore } from '../../stores/chatBgStore'
 import { useChatListStore } from '../../stores/chatListStore'
+import { useMusicStore } from '../../stores/musicStore'
+import { kvGetSync, kvGet, kvSetSync, kvDeleteSync } from '../../ipc/storage'
 import './ChatWindow.css'
 
 interface QuoteTarget {
@@ -20,15 +23,12 @@ interface QuoteTarget {
 // 虚拟滚动：只渲染可见区域 ±BUFFER 条消息
 const BUFFER = 15
 
-interface ChatWindowProps {
-  onBack?: () => void
-}
-
-export function ChatWindow({ onBack }: ChatWindowProps): React.JSX.Element {
+export function ChatWindow(): React.JSX.Element {
   const messages = useChatStore((s) => s.messages)
   const isLoading = useChatStore((s) => s.isLoading)
   const currentSession = useChatSessionStore((s) => s.currentSession)
   const chatBgStore = useChatBgStore()
+  const currentSong = useMusicStore((s) => s.currentSong)
   const [quoteMessage, setQuoteMessage] = useState<QuoteTarget | null>(null)
   const [patSuffix, setPatSuffixState] = useState('小脑袋')
   const [objectAvatar, setObjectAvatar] = useState<string | null>(null)
@@ -38,6 +38,8 @@ export function ChatWindow({ onBack }: ChatWindowProps): React.JSX.Element {
   const [visibleRange, setVisibleRange] = useState({ start: 0, end: 50 })
   const [showSearch, setShowSearch] = useState(false)
   const [highlightMessageId, setHighlightMessageId] = useState<string | null>(null)
+  const [deleteMode, setDeleteMode] = useState(false)
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
 
   // Ctrl+F 打开搜索
   useEffect(() => {
@@ -137,6 +139,16 @@ export function ChatWindow({ onBack }: ChatWindowProps): React.JSX.Element {
     }
   }, [messages, isLoading, isAutoScroll])
 
+  // 表情包消息到达时强制滚到底部
+  useEffect(() => {
+    if (messages.length > 0 && messages[messages.length - 1]?.type === 'emoji') {
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'instant' })
+        setIsAutoScroll(true)
+      }, 50)
+    }
+  }, [messages.length])
+
   // 切换角色时立即滚到底部
   useEffect(() => {
     setIsAutoScroll(true)
@@ -164,38 +176,24 @@ export function ChatWindow({ onBack }: ChatWindowProps): React.JSX.Element {
   // 切换角色时，加载该角色的拍一拍后缀
   useEffect(() => {
     const charId = currentSession?.id
-    if (!charId) {
-      setPatSuffixState('小脑袋')
-      return
-    }
-    try {
-      const saved = localStorage.getItem(`patSuffix-${charId}`)
+    if (!charId) { setPatSuffixState('小脑袋'); return }
+    kvGet<string>(`patSuffix-${charId}`).then((saved) => {
       setPatSuffixState(saved || '小脑袋')
-    } catch {
-      setPatSuffixState('小脑袋')
-    }
+    }).catch(() => setPatSuffixState('小脑袋'))
   }, [currentSession?.id])
 
   const setPatSuffix = useCallback((suffix: string): void => {
     const charId = useChatSessionStore.getState().currentSession?.id
-    if (charId) {
-      localStorage.setItem(`patSuffix-${charId}`, suffix)
-    }
+    if (charId) kvSetSync(`patSuffix-${charId}`, suffix)
     setPatSuffixState(suffix)
   }, [])
 
   useEffect(() => {
     const charId = currentSession?.id
-    if (!charId) {
-      setObjectAvatar(null)
-      return
-    }
-    try {
-      const saved = localStorage.getItem(`char-avatar-${charId}`)
+    if (!charId) { setObjectAvatar(null); return }
+    kvGet<string>(`char-avatar-${charId}`).then((saved) => {
       setObjectAvatar(saved && saved.startsWith('data:image') ? saved : null)
-    } catch {
-      setObjectAvatar(null)
-    }
+    }).catch(() => setObjectAvatar(null))
   }, [currentSession?.id])
 
   const chatBg = currentSession?.id ? chatBgStore.getBg(currentSession.id) : '#FFFFFF'
@@ -232,7 +230,7 @@ export function ChatWindow({ onBack }: ChatWindowProps): React.JSX.Element {
     setObjectAvatar(dataUrl)
     const charId = useChatSessionStore.getState().currentSession?.id
     if (charId) {
-      localStorage.setItem(`char-avatar-${charId}`, dataUrl)
+      kvSetSync(`char-avatar-${charId}`, dataUrl)
       useChatListStore.getState().bumpAvatarVersion(charId)
     }
   }, [])
@@ -243,12 +241,10 @@ export function ChatWindow({ onBack }: ChatWindowProps): React.JSX.Element {
     try {
       await window.electronAPI?.invoke('character:delete', { id: currentSession.id })
 
-      try {
-        localStorage.removeItem(`char-data-${currentSession.id}`)
-        localStorage.removeItem(`char-avatar-${currentSession.id}`)
-        localStorage.removeItem(`patSuffix-${currentSession.id}`)
-        localStorage.removeItem(`chatBg-${currentSession.id}`)
-      } catch { /* ignore */ }
+      kvDeleteSync(`char-data-${currentSession.id}`)
+      kvDeleteSync(`char-avatar-${currentSession.id}`)
+      kvDeleteSync(`patSuffix-${currentSession.id}`)
+      kvDeleteSync(`chatBg-${currentSession.id}`)
 
       useChatStore.getState().clearCharacterMessages(currentSession.id)
 
@@ -264,6 +260,51 @@ export function ChatWindow({ onBack }: ChatWindowProps): React.JSX.Element {
 
   const handleClearQuote = useCallback((): void => {
     setQuoteMessage(null)
+  }, [])
+
+  // 删除模式相关函数
+  const toggleDeleteMode = useCallback((): void => {
+    setDeleteMode(prev => !prev)
+    setSelectedIds(new Set())
+  }, [])
+
+  const handleSelectMessage = useCallback((id: string, selected: boolean): void => {
+    setSelectedIds(prev => {
+      const next = new Set(prev)
+      if (selected) {
+        next.add(id)
+      } else {
+        next.delete(id)
+      }
+      return next
+    })
+  }, [])
+
+  const handleSelectAll = useCallback((): void => {
+    if (selectedIds.size === messages.length) {
+      setSelectedIds(new Set())
+    } else {
+      setSelectedIds(new Set(messages.map(m => m.id)))
+    }
+  }, [messages, selectedIds.size])
+
+  const handleDeleteSelected = useCallback((): void => {
+    if (selectedIds.size === 0) return
+    
+    const confirmed = window.confirm(`确定要删除选中的 ${selectedIds.size} 条消息吗？\n此操作仅删除前端显示，不会影响本地文件。`)
+    if (!confirmed) return
+
+    useChatStore.getState().deleteMessages(Array.from(selectedIds))
+    setSelectedIds(new Set())
+  }, [selectedIds])
+
+  const handleClearAll = useCallback((): void => {
+    const confirmed = window.confirm('确定要清空当前聊天的所有消息吗？\n此操作仅删除前端显示，不会影响本地文件。')
+    if (!confirmed) return
+
+    useChatStore.getState().clearMessages()
+    setSelectedIds(new Set())
+    setDeleteMode(false)
   }, [])
 
   const displayName = currentSession?.name || '选择一个聊天'
@@ -289,8 +330,15 @@ export function ChatWindow({ onBack }: ChatWindowProps): React.JSX.Element {
         onAvatarChange={handleAvatarChange}
         onDelete={handleDelete}
         onSearch={() => setShowSearch(true)}
+        onToggleDeleteMode={toggleDeleteMode}
+        deleteMode={deleteMode}
         characterId={currentSession?.id}
-        onBack={onBack}
+      />
+
+      <NowPlaying
+        songName={useMusicStore.getState().currentSong?.name || ''}
+        artist={useMusicStore.getState().currentSong?.artist || ''}
+        isPlaying={useMusicStore.getState().isPlaying}
       />
 
       <SearchBar
@@ -298,6 +346,39 @@ export function ChatWindow({ onBack }: ChatWindowProps): React.JSX.Element {
         onClose={() => setShowSearch(false)}
         onJumpTo={handleJumpToMessage}
       />
+
+      {/* 删除模式工具栏 */}
+      {deleteMode && (
+        <div className="chat-window__delete-toolbar">
+          <label className="chat-window__delete-select-all">
+            <input
+              type="checkbox"
+              checked={selectedIds.size === messages.length && messages.length > 0}
+              onChange={handleSelectAll}
+            />
+            <span>全选 ({selectedIds.size}/{messages.length})</span>
+          </label>
+          <button
+            className="chat-window__delete-btn chat-window__delete-btn--danger"
+            onClick={handleDeleteSelected}
+            disabled={selectedIds.size === 0}
+          >
+            删除选中
+          </button>
+          <button
+            className="chat-window__delete-btn chat-window__delete-btn--warning"
+            onClick={handleClearAll}
+          >
+            清空全部
+          </button>
+          <button
+            className="chat-window__delete-btn"
+            onClick={toggleDeleteMode}
+          >
+            取消
+          </button>
+        </div>
+      )}
 
       <div className="chat-window__messages" ref={containerRef} style={bgStyle}>
         {!currentSession ? (
@@ -336,6 +417,9 @@ export function ChatWindow({ onBack }: ChatWindowProps): React.JSX.Element {
                 onQuote={handleQuote}
                 onPat={handlePat}
                 highlight={msg.id === highlightMessageId}
+                selectMode={deleteMode}
+                selected={selectedIds.has(msg.id)}
+                onSelect={handleSelectMessage}
               />
             ))}
 
@@ -353,6 +437,7 @@ export function ChatWindow({ onBack }: ChatWindowProps): React.JSX.Element {
         quoteMessage={quoteMessage}
         onClearQuote={handleClearQuote}
         disabled={isLoading}
+        characterId={currentSession?.id}
       />
     </div>
   )

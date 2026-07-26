@@ -4,6 +4,7 @@
 import { readFileSync, writeFileSync, existsSync, readdirSync, statSync, mkdirSync } from 'fs'
 import { join } from 'path'
 import { logger } from './logger'
+import { PATHS } from './dataPath'
 
 export interface ExportData {
   version: string
@@ -14,7 +15,7 @@ export interface ExportData {
   moments: Record<string, unknown>
 }
 
-const DATA_DIR = join(process.cwd(), 'data')
+const DATA_DIR = PATHS.base
 
 export class DataExporter {
   exportAll(): ExportData {

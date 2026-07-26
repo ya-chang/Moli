@@ -1,0 +1,17 @@
+{
+  "notificationSettings": {
+    "appWidth": 400,
+    "appHeight": 80,
+    "appFontSize": 14,
+    "appFontColor": "#1a1a1a",
+    "appBgColor": "#ffffff",
+    "appStaySeconds": 5,
+    "screenEnabled": true,
+    "screenWidth": 800,
+    "screenHeight": 80,
+    "screenFontSize": 20,
+    "screenFontColor": "#1a1a1a",
+    "screenBgColor": "#ffffff",
+    "screenStaySeconds": 10
+  }
+}

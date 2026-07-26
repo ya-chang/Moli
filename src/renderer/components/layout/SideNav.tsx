@@ -1,4 +1,4 @@
-// src/renderer/components/layout/SideNav.tsx
+﻿// src/renderer/components/layout/SideNav.tsx
 // 左侧导航栏 — 头像点击弹出用户信息菜单
 
 import { useState, useRef, useEffect } from 'react'
@@ -17,6 +17,7 @@ const NAV_ITEMS: NavItem[] = [
   { id: 'chat', icon: '💬', label: '消息' },
   { id: 'contacts', icon: '👥', label: '通讯录' },
   { id: 'moments', icon: '📷', label: '朋友圈' },
+  { id: 'music', icon: '🎵', label: '一起听歌' },
 ]
 
 interface SideNavProps {

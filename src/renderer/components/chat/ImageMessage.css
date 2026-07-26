@@ -1,0 +1,54 @@
+/* src/renderer/components/chat/ImageMessage.css */
+/* 图片消息样式 */
+
+.image-message {
+  display: inline-block;
+  max-width: 300px;
+}
+
+.image-message__grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.image-message__item {
+  border-radius: 6px;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+
+.image-message__item img {
+  display: block;
+  max-width: 200px;
+  max-height: 200px;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+/* 单张图片稍大 */
+.image-message__grid:has(.image-message__item:only-child) .image-message__item img {
+  max-width: 280px;
+  max-height: 280px;
+}
+
+/* 附带文字 */
+.image-message__text {
+  margin-top: 6px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  word-break: break-word;
+}
+
+/* 用户发送的图片右对齐 */
+.image-message--user {
+  margin-left: auto;
+  text-align: right;
+}
+
+/* AI发送的图片左对齐 */
+.image-message--assistant {
+  margin-right: auto;
+  text-align: left;
+}

@@ -1,24 +1,13 @@
 /* src/renderer/components/layout/AppLayout.css */
-/* 移动端布局 */
+/* 三栏布局样式 */
 
 .app-layout {
   display: flex;
-  flex-direction: column;
+  flex: 1;
   width: 100%;
   height: 100%;
   overflow: hidden;
   background: var(--bg-secondary);
-}
-
-.app-layout__content {
-  flex: 1;
-  display: flex;
-  overflow: hidden;
-}
-
-/* 底部导航可见时才加 padding */
-.app-layout--has-bottomnav .app-layout__content {
-  padding-bottom: 56px;
 }
 
 /* 占位视图 */

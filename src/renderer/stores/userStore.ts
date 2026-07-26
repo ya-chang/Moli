@@ -1,5 +1,5 @@
 // src/renderer/stores/userStore.ts
-// 用户状态 — 头像 + 名字持久化到 localStorage
+// 用户状态 — 头像 + 名字持久化到文件系统
 
 import { create } from 'zustand'
 
@@ -12,48 +12,34 @@ interface UserState {
   loadAll: () => void
 }
 
-const AVATAR_KEY = 'user-avatar'
-const NAME_KEY = 'user-name'
-
-const loadAvatar = (): string => {
-  try {
-    return localStorage.getItem(AVATAR_KEY) || '👤'
-  } catch {
-    return '👤'
-  }
-}
-
-const loadName = (): string => {
-  try {
-    return localStorage.getItem(NAME_KEY) || ''
-  } catch {
-    return ''
-  }
-}
-
 export const useUserStore = create<UserState>((set) => ({
-  avatar: loadAvatar(),
-  name: loadName(),
+  avatar: '👤',
+  name: '',
 
   setAvatar: (avatar) => {
     set({ avatar })
-    try {
-      localStorage.setItem(AVATAR_KEY, avatar)
-    } catch { /* ignore */ }
+    window.electronAPI?.invoke('user:saveProfile', { avatar }).catch(() => {})
   },
 
   setName: (name) => {
     set({ name })
-    try {
-      localStorage.setItem(NAME_KEY, name)
-    } catch { /* ignore */ }
+    window.electronAPI?.invoke('user:saveProfile', { name }).catch(() => {})
   },
 
   loadAvatar: () => {
-    set({ avatar: loadAvatar() })
+    window.electronAPI?.invoke('user:loadProfile').then((result: any) => {
+      if (result?.avatar) set({ avatar: result.avatar })
+    }).catch(() => {})
   },
 
   loadAll: () => {
-    set({ avatar: loadAvatar(), name: loadName() })
+    window.electronAPI?.invoke('user:loadProfile').then((result: any) => {
+      if (result) {
+        set({
+          avatar: result.avatar || '👤',
+          name: result.name || ''
+        })
+      }
+    }).catch(() => {})
   }
 }))

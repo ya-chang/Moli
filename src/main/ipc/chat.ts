@@ -9,9 +9,12 @@ import { IntentClassifier } from '../engine/IntentClassifier'
 import { Humanizer } from '../engine/Humanizer'
 import { PatHandler } from '../engine/PatHandler'
 import { logger } from '../utils/logger'
-import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, unlinkSync } from 'fs'
+import { readFileSync, existsSync, mkdirSync, readdirSync, unlinkSync } from 'fs'
+import { writeFile } from 'fs/promises'
 import { join } from 'path'
 import { app } from 'electron'
+import { getAutoMessageHandlerInstance } from '../auto-message-handler'
+import { PATHS } from '../utils/dataPath'
 
 interface IpcMessage {
   content: string
@@ -24,6 +27,7 @@ interface IpcMessage {
   baseUrl?: string
   quoteContent?: string
   userName?: string
+  images?: string[]  // base64 data URLs
   currentSong?: {
     name: string
     artist: string
@@ -35,17 +39,16 @@ interface IpcMessage {
 
 // 消息存储目录
 const getMessagesDir = (): string => {
-  const base = app.isPackaged ? app.getPath('userData') : join(process.cwd(), 'data')
-  const dir = join(base, 'messages')
+  const dir = join(PATHS.base, 'messages')
   if (!existsSync(dir)) mkdirSync(dir, { recursive: true })
   return dir
 }
 
-// 保存消息到文件
-const saveMessagesToFile = (characterId: string, messages: unknown[]): void => {
+// 保存消息到文件（异步）
+const saveMessagesToFile = async (characterId: string, messages: unknown[]): Promise<void> => {
   const dir = getMessagesDir()
   const filePath = join(dir, `${characterId}.json`)
-  writeFileSync(filePath, JSON.stringify(messages, null, 2), 'utf-8')
+  await writeFile(filePath, JSON.stringify(messages, null, 2), 'utf-8')
 }
 
 // 从文件加载消息
@@ -84,9 +87,9 @@ export const registerChatIPC = (): void => {
   })
 
   // 保存消息
-  ipcMain.handle('chat:saveMessages', (_event, params: { characterId: string; messages: unknown[] }) => {
+  ipcMain.handle('chat:saveMessages', async (_event, params: { characterId: string; messages: unknown[] }) => {
     try {
-      saveMessagesToFile(params.characterId, params.messages)
+      await saveMessagesToFile(params.characterId, params.messages)
       return { success: true }
     } catch (error) {
       const errMsg = error instanceof Error ? error.message : '未知错误'
@@ -106,6 +109,44 @@ export const registerChatIPC = (): void => {
       return { success: false, error: errMsg }
     }
   })
+
+  // 导出聊天记录
+  ipcMain.handle('chat:export', async (_event, params: { characterId: string; format: 'txt' | 'json' }) => {
+    try {
+      const messages = loadMessagesFromFile(params.characterId) as Array<{
+        role: string; content: string; timestamp: number; type?: string
+      }>
+      const { dialog } = await import('electron')
+      const ext = params.format === 'json' ? 'json' : 'txt'
+      const result = await dialog.showSaveDialog({
+        title: '导出聊天记录',
+        defaultPath: `聊天记录_${params.characterId}.${ext}`,
+        filters: [{ name: ext.toUpperCase(), extensions: [ext] }]
+      })
+      if (result.canceled || !result.filePath) return { success: false }
+
+      let content: string
+      if (params.format === 'json') {
+        content = JSON.stringify(messages, null, 2)
+      } else {
+        content = messages
+          .filter(m => m.type !== 'pat')
+          .map(m => {
+            const time = new Date(m.timestamp).toLocaleString('zh-CN')
+            const role = m.role === 'user' ? '我' : 'AI'
+            return `[${time}] ${role}: ${m.content}`
+          })
+          .join('\n\n')
+      }
+
+      const { writeFile } = await import('fs/promises')
+      await writeFile(result.filePath, content, 'utf-8')
+      return { success: true, path: result.filePath }
+    } catch (error) {
+      return { success: false, error: (error as Error).message }
+    }
+  })
+
   ipcMain.handle(
     IPC_CHANNELS.CHAT_SEND,
     async (event, params: IpcMessage) => {
@@ -113,6 +154,12 @@ export const registerChatIPC = (): void => {
       const senderWindow = BrowserWindow.fromWebContents(event.sender)
 
       logger.info(`收到消息: id=${msgId}`)
+
+      // 记录最后消息时间，供"想你了"功能使用
+      const amh = getAutoMessageHandlerInstance()
+      if (amh) {
+        amh.setLastMessageTime(params.characterId, Date.now())
+      }
 
       try {
         // 拍一拍 → 根据人设生成回应
@@ -165,14 +212,52 @@ export const registerChatIPC = (): void => {
         const humanized = humanizer.process(fullContent)
 
         // 人味儿处理完成后，发送最终状态标记
+        // 如果 humanizer 没有修改内容（或替换了为 emoji），才发 replace
+        const finalContent = humanized.content
+        const contentChanged = finalContent !== fullContent
         senderWindow?.webContents.send(IPC_CHANNELS.CHAT_CHUNK, {
           chunkId: msgId,
-          content: humanized.content !== fullContent ? humanized.content : '',
+          content: contentChanged ? finalContent : '',
           index: 0,
           total: 1,
           isLast: true,
-          replace: humanized.content !== fullContent
+          replace: contentChanged
         })
+
+        // AI 表情包发送（异步，不阻塞文字回复）
+        try {
+          const shouldSend = engine.shouldSendEmoji(params.characterId)
+          logger.info(`[表情包] 检查: characterId=${params.characterId}, shouldSend=${shouldSend}`)
+          if (shouldSend) {
+            const emotion = engine.getEmotionState(params.characterId)
+            const emojiResult = engine.selectEmoji(
+              params.characterId,
+              emotion.currentMood,
+              params.content
+            )
+            logger.info(`[表情包] 选择结果: ${JSON.stringify(emojiResult)}`)
+            if (emojiResult) {
+              const emojiMsgId = `emoji_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`
+              setTimeout(() => {
+                if (senderWindow && !senderWindow.isDestroyed()) {
+                  senderWindow.webContents.send(IPC_CHANNELS.CHAT_CHUNK, {
+                    chunkId: emojiMsgId,
+                    content: `[emoji:${emojiResult.id}]`,
+                    index: 0,
+                    total: 1,
+                    isLast: true,
+                    emoji: true,
+                    emojiId: emojiResult.id,
+                    emojiFilePath: emojiResult.filePath,
+                    characterId: params.characterId
+                  })
+                }
+              }, 500)
+            }
+          }
+        } catch (emojiErr) {
+          logger.error('[表情包] 发送失败', emojiErr)
+        }
 
         // TTS 语音合成（异步，不阻塞回复）— 按角色设置
         try {
@@ -264,6 +349,36 @@ const streamToChunks = async (
   })
 
   try {
+    // 有图片时读取角色的视觉模型配置
+    let visionParams: Record<string, string> = {}
+    if (params.images && params.images.length > 0) {
+      logger.info(`[视觉] 收到 ${params.images.length} 张图片，角色ID: ${params.characterId}`)
+      try {
+        const { CharacterManager } = await import('../character/CharacterManager')
+        const cm = new CharacterManager()
+        const charConfig = cm.get(params.characterId)
+        logger.info(`[视觉] 角色配置: visionEnabled=${charConfig?.visionEnabled}, visionModel=${charConfig?.visionModel}, visionApiKey=${charConfig?.visionApiKey ? '已设置' : '未设置'}`)
+        if (charConfig?.visionEnabled && charConfig.visionModel) {
+          // 只添加有值的字段，避免 undefined 覆盖
+          if (charConfig.visionProvider || charConfig.provider) {
+            visionParams.visionProvider = charConfig.visionProvider || charConfig.provider
+          }
+          visionParams.visionModel = charConfig.visionModel
+          if (charConfig.visionApiKey || charConfig.apiKey) {
+            visionParams.visionApiKey = charConfig.visionApiKey || charConfig.apiKey || ''
+          }
+          if (charConfig.visionBaseUrl || charConfig.baseUrl) {
+            visionParams.visionBaseUrl = charConfig.visionBaseUrl || charConfig.baseUrl || ''
+          }
+          logger.info(`[视觉] 使用视觉模型: ${visionParams.visionProvider}/${visionParams.visionModel}`)
+        } else {
+          logger.warn(`[视觉] 角色未配置视觉模型 (visionEnabled=${charConfig?.visionEnabled}, visionModel=${charConfig?.visionModel})`)
+        }
+      } catch (err) {
+        logger.error('[视觉] 读取角色配置失败', err)
+      }
+    }
+
     for await (const chunk of chatEngine.sendMessageStream({
       content: params.content,
       characterId: params.characterId,
@@ -275,6 +390,8 @@ const streamToChunks = async (
       baseUrl: params.baseUrl,
       quoteContent: params.quoteContent,
       userName: params.userName,
+      images: params.images,
+      ...visionParams,
       currentSong: params.currentSong
     })) {
       fullContent += chunk

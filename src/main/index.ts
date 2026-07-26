@@ -20,7 +20,7 @@ import { MusicSourceManager } from './music/MusicSourceManager'
 import { registerSourceIPC, registerAudioProxy } from './music/sourceIpc'
 import { MusicWindow } from './music/MusicWindow'
 import { NeteaseDetector } from './music/NeteaseDetector'
-import { Scheduler } from './proactive/Scheduler'
+import { AutoMessageHandler, setAutoMessageHandlerInstance } from './auto-message-handler'
 import { PluginManager } from './plugins/PluginManager'
 import { registerPluginIPC } from './plugins/ipc'
 import { AutoBackup } from './backup/AutoBackup'
@@ -28,8 +28,11 @@ import { CrashRecovery } from './backup/CrashRecovery'
 import { TTSService } from './tts/TTSService'
 import { TTSState } from './tts/TTSState'
 import { registerTTSIPC } from './tts/ipc'
+import { EmojiManager } from './emojis/EmojiManager'
+import { registerEmojiIPC } from './emojis/ipc'
 import { PATHS } from './utils/dataPath'
 import { logger } from './utils/logger'
+import { getNotificationWindow } from './notification/NotificationWindow'
 
 // 全局错误捕获 — 防止进程崩溃
 process.on('uncaughtException', (error) => {
@@ -41,8 +44,7 @@ process.on('unhandledRejection', (reason) => {
 })
 
 let mainWindow: BrowserWindow | null = null
-let scheduler: Scheduler | null = null
-let schedulerInterval: ReturnType<typeof setInterval> | null = null
+let autoMessageHandler: AutoMessageHandler | null = null
 let musicState: MusicState | null = null
 let musicInfoService: MusicInfoService | null = null
 let musicContextInjector: MusicContextInjector | null = null
@@ -54,6 +56,7 @@ let autoBackup: AutoBackup | null = null
 let crashRecovery: CrashRecovery | null = null
 let ttsService: TTSService | null = null
 let ttsState: TTSState | null = null
+let emojiManager: EmojiManager | null = null
 
 const isDev = !app.isPackaged
 
@@ -114,46 +117,50 @@ const registerWindowControls = (): void => {
       shell.openExternal(url)
     })
   })
-}
 
-// 启动主动消息调度
-const startScheduler = (characterId: string): void => {
-  if (schedulerInterval) {
-    clearInterval(schedulerInterval)
-  }
-
-  // 检查角色是否启用了主动消息
-  try {
-    const { CharacterManager } = require('./character/CharacterManager') as typeof import('./character/CharacterManager')
-    const cm = new CharacterManager()
-    const character = cm.get(characterId)
-    if (character && !character.proactiveEnabled) {
-      logger.info(`角色 ${characterId} 未启用主动消息，跳过调度`)
-      return
-    }
-  } catch (err) { logger.debug('主动消息调度器检查角色配置失败', err) }
-
-  scheduler = new Scheduler(characterId, (message) => {
-    if (mainWindow) {
-      mainWindow.webContents.send('proactive:message', {
-        characterId,
-        content: message
-      })
+  // 测试通知
+  ipcMain.handle('test-notification', async (_event, data: { characterId: string; characterName: string; content: string }) => {
+    try {
+      const nw = getNotificationWindow()
+      nw.show(data.characterName, data.content, '🤖')
+      return true
+    } catch (err) {
+      logger.error('测试通知失败:', err)
+      return false
     }
   })
 
-  // 每分钟检查一次定时触发
-  schedulerInterval = setInterval(() => {
-    const scheduledMessage = scheduler?.checkScheduled()
-    if (scheduledMessage && mainWindow) {
-      mainWindow.webContents.send('proactive:message', {
-        characterId,
-        content: scheduledMessage
-      })
+  // 更新通知设置
+  ipcMain.on('notification:settings-updated', (_event, settings: any) => {
+    logger.info('[Notification] 设置已更新')
+    try {
+      const fs = require('fs')
+      const settingsPath = join(PATHS.base, 'notification-settings.json')
+      fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2))
+      logger.info(`[Notification] 设置已保存到: ${settingsPath}`)
+    } catch (err) {
+      logger.error('[Notification] 保存设置失败', err)
     }
-  }, 60 * 1000)
+  })
 
-  logger.info(`主动消息调度器已启动: characterId=${characterId}`)
+  // 快捷切换应用内弹窗开关
+  ipcMain.handle('notification:toggle', () => {
+    try {
+      const fs = require('fs')
+      const settingsPath = join(PATHS.base, 'notification-settings.json')
+      let settings: Record<string, unknown> = {}
+      try { settings = JSON.parse(fs.readFileSync(settingsPath, 'utf-8')) } catch {}
+      // 切换 appEnabled（应用内弹窗），默认 true
+      const currentVal = settings.appEnabled !== false
+      settings.appEnabled = !currentVal
+      fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2))
+      logger.info(`[Notification] 应用内弹窗切换为: ${settings.appEnabled}`)
+      return { success: true, appEnabled: settings.appEnabled }
+    } catch (err) {
+      logger.error('[Notification] 弹窗切换失败', err)
+      return { success: false }
+    }
+  })
 }
 
 app.whenReady().then(() => {
@@ -250,82 +257,84 @@ app.whenReady().then(() => {
       musicWindow?.hide()
       return { success: true }
     })
-
-    // 前端获取当前歌曲信息
-    ipcMain.handle('music:get-current-song', () => {
-      const state = musicState?.getState()
-      return state?.songInfo || null
-    })
   }
 
   // 初始化插件系统
-  if (mainWindow) {
-    pluginManager = new PluginManager(mainWindow)
-    registerPluginIPC(pluginManager)
-    pluginManager.loadAll()
-    logger.info('插件系统已初始化')
-  }
+  pluginManager = new PluginManager(mainWindow!)
+  registerPluginIPC(pluginManager)
 
-  // 初始化 TTS
-  if (mainWindow) {
-    ttsService = new TTSService(PATHS.base)
-    ttsState = new TTSState()
-    registerTTSIPC(ttsService, ttsState, mainWindow)
+  // 初始化表情包系统
+  emojiManager = new EmojiManager(join(PATHS.base, 'emojis'))
+  registerEmojiIPC(emojiManager)
 
-    // 将 TTS 注入 ChatEngine
-    const chatEngine = getChatEngine()
-    chatEngine.setTTS(ttsService, ttsState)
-
-    logger.info('TTS系统已初始化')
-  }
-
-  // 初始化崩溃恢复 + 自动备份
-  const dataDir = PATHS.base
-  crashRecovery = new CrashRecovery(dataDir)
+  // 初始化备份系统
+  crashRecovery = new CrashRecovery(PATHS.base)
   crashRecovery.check()
 
-  autoBackup = new AutoBackup(dataDir)
-  autoBackup.start()
+  autoBackup = new AutoBackup(PATHS.base)
 
-  // 备份 IPC
-  ipcMain.handle(IPC_CHANNELS.BACKUP_NOW, () => {
-    const date = autoBackup!.backup()
-    return { success: !!date, date }
-  })
+  // 初始化 TTS 系统
+  ttsService = new TTSService(PATHS.base)
+  ttsState = new TTSState()
+  registerTTSIPC(ttsService, ttsState, mainWindow!)
 
-  ipcMain.handle(IPC_CHANNELS.BACKUP_RESTORE, (_event, params: { date: string }) => {
-    const ok = autoBackup!.restore(params.date)
-    return { success: ok }
-  })
-
-  ipcMain.handle(IPC_CHANNELS.BACKUP_LIST, () => {
-    return autoBackup!.listBackups()
-  })
-
-  ipcMain.handle(IPC_CHANNELS.BACKUP_CHECK_INTEGRITY, () => {
-    return crashRecovery!.checkIntegrity()
-  })
-
-  ipcMain.handle(IPC_CHANNELS.BACKUP_GET_STATUS, () => {
-    return {
-      lastBackup: autoBackup!.getLastBackupDate(),
-      lastCrash: crashRecovery!.getLastCrashTime()
-    }
-  })
-
-  ipcMain.handle('backup:get-config', () => {
-    return autoBackup!.getConfig()
-  })
-
-  ipcMain.handle('backup:set-config', (_event, params: Partial<{ maxBackups: number; backupHour: number; backupMinute: number }>) => {
-    autoBackup!.setConfig(params)
-    return { success: true }
-  })
+  // 将 TTS 服务注入 ChatEngine
+  const chatEngine = getChatEngine()
+  chatEngine.setTTS(ttsService, ttsState)
 
   logger.info('备份系统已初始化')
 
-  // 启动默认角色的主动消息
-  startScheduler('default')
+  // 初始化自动消息系统
+  autoMessageHandler = new AutoMessageHandler(mainWindow)
+  setAutoMessageHandlerInstance(autoMessageHandler)
+  
+  // 获取所有角色并启动自动消息
+  try {
+    const fs = require('fs')
+    const charactersDir = PATHS.characters
+    const discoveredIds = new Set<string>()
+    
+    logger.info(`[AutoMessage] 搜索角色目录: ${charactersDir}`)
+    
+    if (fs.existsSync(charactersDir)) {
+      const allItems = fs.readdirSync(charactersDir)
+      logger.info(`[AutoMessage] 目录内容: ${allItems.join(', ')}`)
+      const characterDirs = allItems.filter((f: string) => {
+        const fullPath = join(charactersDir, f)
+        const isDir = fs.statSync(fullPath).isDirectory()
+        const hasConfig = fs.existsSync(join(fullPath, 'config.yaml'))
+        return isDir && hasConfig
+      })
+      logger.info(`[AutoMessage] 有效角色: ${characterDirs.join(', ')}`)
+      for (const characterId of characterDirs) {
+        if (!discoveredIds.has(characterId)) {
+          discoveredIds.add(characterId)
+          autoMessageHandler.start(characterId)
+          logger.info(`[AutoMessage] 为角色 ${characterId} 启动自动消息`)
+        }
+      }
+    }
+    logger.info(`[AutoMessage] 共发现 ${discoveredIds.size} 个角色`)
+  } catch (err) {
+    logger.error('启动自动消息失败', err)
+  }
+
+  // 测试通知弹窗 — 前端可调用 'notification:test' 立即弹出
+  ipcMain.handle('notification:test', (_event, params?: { name?: string; message?: string }) => {
+    try {
+      const nw = getNotificationWindow()
+      nw.show(
+        params?.name || '测试角色',
+        params?.message || '这是一条测试通知消息 🎉',
+        '💌'
+      )
+      logger.info('[Test] 通知弹窗已触发')
+      return { success: true }
+    } catch (err) {
+      logger.error('[Test] 通知弹窗失败', err)
+      return { success: false, error: String(err) }
+    }
+  })
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
@@ -335,15 +344,18 @@ app.whenReady().then(() => {
 })
 
 app.on('window-all-closed', () => {
-  if (schedulerInterval) {
-    clearInterval(schedulerInterval)
-  }
-  // 清理崩溃恢复锁文件
+  autoMessageHandler?.stopAll()
   crashRecovery?.cleanup()
   autoBackup?.stop()
   if (process.platform !== 'darwin') {
     app.quit()
   }
+})
+
+// 应用退出前确保停止所有调度器
+app.on('before-quit', () => {
+  autoMessageHandler?.stopAll()
+  logger.info('[App] 应用退出，停止所有自动消息')
 })
 
 export { mainWindow }

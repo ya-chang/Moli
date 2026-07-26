@@ -14,9 +14,10 @@ interface TitleBarProps {
   onAvatarChange?: (dataUrl: string) => void
   onDelete?: () => void
   onSearch?: () => void
+  onToggleDeleteMode?: () => void
+  deleteMode?: boolean
   currentPatSuffix?: string
   characterId?: string
-  onBack?: () => void
 }
 
 export function TitleBar({
@@ -28,15 +29,17 @@ export function TitleBar({
   onAvatarChange,
   onDelete,
   onSearch,
+  onToggleDeleteMode,
+  deleteMode,
   currentPatSuffix,
-  characterId,
-  onBack
+  characterId
 }: TitleBarProps): React.JSX.Element {
   const [showMenu, setShowMenu] = useState(false)
   const [showSuffixInput, setShowSuffixInput] = useState(false)
   const [suffixValue, setSuffixValue] = useState(currentPatSuffix || '小脑袋')
   const [showVoice, setShowVoice] = useState(false)
   const [ttsEnabled, setTtsEnabled] = useState(false)
+  const [visionEnabled, setVisionEnabled] = useState(false)
   const avatarInputRef = useRef<HTMLInputElement>(null)
   const menuRef = useRef<HTMLDivElement>(null)
   const suffixInputRef = useRef<HTMLInputElement>(null)
@@ -59,6 +62,32 @@ export function TitleBar({
     }
     loadTtsState()
   }, [characterId])
+
+  // 加载视觉模型状态
+  useEffect(() => {
+    if (!characterId) return
+    const loadVisionState = async (): Promise<void> => {
+      try {
+        const charList = await window.electronAPI?.invoke('character:list') as Array<Record<string, unknown>> | null
+        const charData = charList?.find(c => c.id === characterId)
+        if (charData) {
+          setVisionEnabled(!!charData.visionEnabled)
+        }
+      } catch { /* ignore */ }
+    }
+    loadVisionState()
+  }, [characterId])
+
+  // 切换视觉模型
+  const handleToggleVision = async (): Promise<void> => {
+    if (!characterId) return
+    const newState = !visionEnabled
+    setVisionEnabled(newState)
+    await window.electronAPI?.invoke('character:update', {
+      id: characterId,
+      updates: { visionEnabled: newState }
+    })
+  }
 
   // 监听自定义事件：VoicePanel 关闭时刷新 TTS 状态
   useEffect(() => {
@@ -141,16 +170,23 @@ export function TitleBar({
     }
   }
 
+  const handleExport = async (format: 'txt' | 'json'): Promise<void> => {
+    if (!characterId) return
+    try {
+      const result = await window.electronAPI?.invoke('chat:export', { characterId, format }) as { success?: boolean; path?: string }
+      if (result?.success && result.path) {
+        // 可以加个 toast 提示
+      }
+    } catch (err) {
+      console.error('导出失败:', err)
+    }
+  }
+
   return (
     <div className="titlebar chat-window__titlebar">
       <input ref={avatarInputRef} type="file" accept="image/*" onChange={handleAvatarUpload} style={{ display: 'none' }} />
 
       <div className="titlebar__left">
-        {onBack && (
-          <button className="titlebar__back-btn" onClick={onBack} title="返回">
-            ←
-          </button>
-        )}
         <span className="titlebar__name">
           {isTyping ? '对方正在输入中...' : name}
         </span>
@@ -189,6 +225,17 @@ export function TitleBar({
                   修改拍一拍后缀
                 </div>
                 <div className="titlebar__dropdown-divider" />
+                <div className="titlebar__dropdown-item" onClick={() => { setShowMenu(false); handleExport('txt') }}>
+                  导出聊天记录 (TXT)
+                </div>
+                <div className="titlebar__dropdown-item" onClick={() => { setShowMenu(false); handleExport('json') }}>
+                  导出聊天记录 (JSON)
+                </div>
+                <div className="titlebar__dropdown-divider" />
+                <div className="titlebar__dropdown-item" onClick={() => { setShowMenu(false); onToggleDeleteMode?.() }}>
+                  {deleteMode ? '退出删除模式' : '删除消息'}
+                </div>
+                <div className="titlebar__dropdown-divider" />
                 <div className="titlebar__dropdown-item titlebar__dropdown-item--danger" onClick={handleDelete}>
                   删除对象
                 </div>
@@ -199,6 +246,15 @@ export function TitleBar({
       </div>
 
       <div className="titlebar__right">
+        {/* 视觉模型按钮 */}
+        <button
+          className={`titlebar__btn ${visionEnabled ? 'titlebar__btn--vision-active' : ''}`}
+          title={visionEnabled ? '图片理解已启用' : '启用图片理解'}
+          onClick={handleToggleVision}
+        >
+          <span style={{ fontSize: 16 }}>{visionEnabled ? '👁️' : '👁️‍🗨️'}</span>
+        </button>
+
         {/* 语音合成按钮 */}
         <button
           className={`titlebar__btn ${ttsEnabled ? 'titlebar__btn--tts-active' : ''}`}
@@ -206,6 +262,19 @@ export function TitleBar({
           onClick={() => setShowVoice(!showVoice)}
         >
           <span style={{ fontSize: 16 }}>{ttsEnabled ? '🔊' : '🔇'}</span>
+        </button>
+
+        <button className="titlebar__btn" onClick={() => window.electronAPI?.minimize()} title="最小化">
+          <svg width="12" height="12" viewBox="0 0 12 12"><line x1="1" y1="6" x2="11" y2="6" stroke="currentColor" strokeWidth="1" /></svg>
+        </button>
+        <button className="titlebar__btn" onClick={() => window.electronAPI?.maximize()} title="最大化">
+          <svg width="12" height="12" viewBox="0 0 12 12"><rect x="1" y="1" width="10" height="10" fill="none" stroke="currentColor" strokeWidth="1" /></svg>
+        </button>
+        <button className="titlebar__btn titlebar__btn--close" onClick={() => window.electronAPI?.close()} title="关闭">
+          <svg width="12" height="12" viewBox="0 0 12 12">
+            <line x1="1" y1="1" x2="11" y2="11" stroke="currentColor" strokeWidth="1" />
+            <line x1="11" y1="1" x2="1" y2="11" stroke="currentColor" strokeWidth="1" />
+          </svg>
         </button>
       </div>
 

@@ -5,8 +5,9 @@ import { ipcMain } from 'electron'
 import { writeFileSync, existsSync, mkdirSync, readFileSync } from 'fs'
 import { join } from 'path'
 import { logger } from '../utils/logger'
+import { PATHS } from '../utils/dataPath'
 
-const AVATAR_DIR = join(process.cwd(), 'data', 'avatars')
+const AVATAR_DIR = PATHS.avatars
 
 const ensureDir = (): void => {
   if (!existsSync(AVATAR_DIR)) {

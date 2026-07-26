@@ -4,6 +4,7 @@
 import { appendFileSync, existsSync, mkdirSync } from 'fs'
 import { join } from 'path'
 import { app } from 'electron'
+import { PATHS } from './dataPath'
 
 type LogLevel = 'debug' | 'info' | 'warn' | 'error'
 
@@ -24,10 +25,9 @@ const formatTime = (): string => {
   return new Date().toISOString()
 }
 
-// 日志目录 — 打包后用 userData，开发时用 cwd/logs
+// 日志目录
 const getLogDir = (): string => {
-  const baseDir = app.isPackaged ? app.getPath('userData') : join(process.cwd(), 'data')
-  const logDir = join(baseDir, 'logs')
+  const logDir = join(PATHS.base, 'logs')
   if (!existsSync(logDir)) {
     mkdirSync(logDir, { recursive: true })
   }

@@ -1,0 +1,892 @@
+/* src/renderer/components/music/MusicPage.css */
+/* 一起听歌页面样式 */
+
+.music-page {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100%;
+  background: #fff;
+  overflow: hidden;
+}
+
+/* 标题栏 */
+.music-page__header {
+  display: flex;
+  align-items: center;
+  height: 52px;
+  padding: 0 16px;
+  background: #fff;
+  border-bottom: 1px solid var(--border-color);
+  -webkit-app-region: drag;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 60;
+}
+
+.music-page__icon {
+  font-size: 20px;
+  margin-right: 8px;
+}
+
+.music-page__title {
+  font-size: var(--font-size-lg);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.music-page__window-controls {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: auto;
+  -webkit-app-region: no-drag;
+}
+
+.music-page__win-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: background-color 0.15s ease;
+}
+
+.music-page__win-btn:hover {
+  background: #E8E8E8;
+}
+
+.music-page__win-btn--close:hover {
+  background: var(--unread-badge);
+  color: white;
+}
+
+/* 内容区 */
+.music-page__body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* 左侧：表单 */
+.music-page__left {
+  flex: 0 0 55%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 24px;
+  border-right: 1px solid var(--border-color);
+}
+
+.music-page__section {
+  margin-bottom: 20px;
+}
+
+.music-page__section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.music-page__section-hint {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* 表单 */
+.music-page__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.music-page__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.music-page__label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.music-page__input {
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+  outline: none;
+}
+
+.music-page__input:focus {
+  border-color: var(--primary-color);
+}
+
+.music-page__textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+  outline: none;
+  resize: vertical;
+  font-family: inherit;
+  line-height: 1.5;
+}
+
+.music-page__textarea:focus {
+  border-color: var(--primary-color);
+}
+
+.music-page__submit-btn {
+  width: 100%;
+  height: 44px;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.music-page__submit-btn:hover {
+  opacity: 0.9;
+}
+
+.music-page__submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 右侧：当前歌曲 */
+.music-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.music-page__current {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.music-page__current-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.music-page__listening-dot {
+  width: 8px;
+  height: 8px;
+  background: #07C160;
+  border-radius: 50%;
+}
+
+.music-page__listening-text {
+  font-size: 13px;
+  color: #07C160;
+  font-weight: 500;
+  flex: 1;
+}
+
+.music-page__stop-btn {
+  padding: 4px 12px;
+  background: none;
+  border: 1px solid #ff4d4f;
+  color: #ff4d4f;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.music-page__stop-btn:hover {
+  background: #fff1f0;
+}
+
+.music-page__song-info {
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.music-page__song-row {
+  display: flex;
+  gap: 12px;
+  padding: 4px 0;
+}
+
+.music-page__song-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  min-width: 40px;
+  flex-shrink: 0;
+}
+
+.music-page__song-value {
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.music-page__song-value--name {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.music-page__song-desc {
+  font-size: 13px;
+  color: var(--text-primary);
+  line-height: 1.6;
+  padding: 10px;
+  background: var(--bg-primary);
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+.music-page__song-lyrics {
+  margin-top: 12px;
+}
+
+.music-page__song-lyrics .music-page__song-label {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.music-page__lyrics-text {
+  font-size: 13px;
+  color: var(--text-primary);
+  line-height: 1.8;
+  padding: 10px;
+  background: var(--bg-primary);
+  border-radius: 8px;
+  font-style: italic;
+  white-space: pre-wrap;
+}
+
+.music-page__hint {
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 12px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+}
+
+/* 空状态 */
+.music-page__empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.music-page__empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.music-page__empty-text {
+  font-size: 16px;
+  color: var(--text-primary);
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.music-page__empty-hint {
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+/* ========== 歌词面板 ========== */
+.lyrics-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 20px;
+  scroll-behavior: smooth;
+  background: var(--bg-secondary);
+}
+
+.lyrics-spacer {
+  height: 40%;
+}
+
+.lyric-line {
+  padding: 10px 0;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+  transition: all 0.3s ease;
+  line-height: 1.6;
+}
+
+.lyric-active {
+  color: var(--text-primary);
+  font-size: 15px;
+  font-weight: 600;
+  transform: scale(1.02);
+}
+
+.lyric-translation {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.lyric-active .lyric-translation {
+  color: var(--text-secondary);
+  opacity: 0.8;
+}
+
+.lyrics-empty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+/* ========== 热门评论 ========== */
+.hot-comments {
+  padding: 16px;
+  border-top: 1px solid var(--border-color);
+  background: var(--bg-primary);
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.hot-comments-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.comment-item {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.comment-item:last-child {
+  border-bottom: none;
+}
+
+.comment-content {
+  font-size: 13px;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+.comment-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.comment-likes {
+  color: var(--unread-badge);
+}
+
+/* ========== 聊天窗口顶部状态栏 ========== */
+.now-playing-bar {
+  display: flex;
+  align-items: center;
+  padding: 6px 12px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.now-playing-icon {
+  margin-right: 6px;
+}
+
+.now-playing-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ========== LX Music 连接 ========== */
+.music-page__connect {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  text-align: center;
+}
+
+.music-page__connect-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+}
+
+.music-page__connect-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.music-page__connect-desc {
+  font-size: 14px;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.music-page__connect-desc a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.music-page__connect-desc a:hover {
+  text-decoration: underline;
+}
+
+.music-page__connect-hint {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.music-page__connect-btn {
+  margin-top: 20px;
+  padding: 10px 32px;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.music-page__connect-btn:hover {
+  opacity: 0.9;
+}
+
+.music-page__connect-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ========== 播放器 ========== */
+.music-page__player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  gap: 24px;
+}
+
+.music-page__song {
+  text-align: center;
+}
+
+.music-page__song-name {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.music-page__song-artist {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.music-page__song-album {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.music-page__controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.music-page__ctrl-btn {
+  width: 48px;
+  height: 48px;
+  border: none;
+  background: var(--bg-secondary);
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.music-page__ctrl-btn:hover {
+  background: #E8E8E8;
+}
+
+.music-page__ctrl-btn--play {
+  width: 56px;
+  height: 56px;
+  font-size: 24px;
+  background: var(--primary-color);
+  color: white;
+}
+
+.music-page__ctrl-btn--play:hover {
+  opacity: 0.9;
+}
+
+.music-page__current-lyric {
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 8px 16px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  min-height: 20px;
+}
+
+.music-page__waiting {
+  text-align: center;
+}
+
+.music-page__waiting-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.music-page__waiting-text {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.music-page__disconnect-btn {
+  padding: 6px 16px;
+  background: none;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.music-page__disconnect-btn:hover {
+  border-color: #ff4d4f;
+  color: #ff4d4f;
+}
+
+/* ========== 歌词 ========== */
+.music-page__lyrics {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.music-page__lyric-line {
+  padding: 8px 0;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.music-page__lyric-active {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 15px;
+}
+
+/* ========== 歌曲信息面板 ========== */
+.song-info-panel {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-primary);
+}
+
+.song-cover {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+  margin-right: 12px;
+}
+
+.song-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.song-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.song-artist {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.song-album {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+/* ========== 歌词面板 ========== */
+.lyrics-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 20px;
+  scroll-behavior: smooth;
+  background: var(--bg-secondary);
+}
+
+.lyrics-spacer {
+  height: 40%;
+}
+
+.lyric-line {
+  padding: 10px 0;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+  transition: all 0.3s ease;
+  line-height: 1.6;
+}
+
+.lyric-active {
+  color: var(--text-primary);
+  font-size: 15px;
+  font-weight: 600;
+  transform: scale(1.02);
+}
+
+.lyric-translation {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.lyric-active .lyric-translation {
+  color: var(--text-secondary);
+  opacity: 0.8;
+}
+
+.lyrics-empty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+/* ========== 热门评论 ========== */
+.hot-comments {
+  padding: 16px;
+  border-top: 1px solid var(--border-color);
+  background: var(--bg-primary);
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.hot-comments-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.comment-item {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.comment-item:last-child {
+  border-bottom: none;
+}
+
+.comment-content {
+  font-size: 13px;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+.comment-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.comment-likes {
+  color: #fa5151;
+}
+
+/* ========== 播放器区域 ========== */
+.music-page__player {
+  flex: 0 0 60%;
+  position: relative;
+  background: #fff;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.music-page__loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: var(--bg-primary);
+  z-index: 10;
+}
+
+.music-page__loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--border-color);
+  border-top-color: var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ========== 浮动歌词面板 ========== */
+.music-lyrics-panel {
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 280px;
+  background: var(--bg-primary);
+  border-left: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: row;
+  z-index: 50;
+  transition: width 0.3s ease;
+  box-shadow: -2px 0 8px rgba(0,0,0,0.1);
+}
+
+.music-lyrics-panel--collapsed {
+  width: 32px;
+}
+
+/* 收起/展开按钮（在面板左侧） */
+.music-lyrics-toggle {
+  width: 32px;
+  flex-shrink: 0;
+  background: var(--bg-secondary);
+  border: none;
+  border-right: 1px solid var(--border-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: var(--text-secondary);
+  transition: background 0.2s;
+}
+
+.music-lyrics-toggle:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+/* 歌词内容区域 */
+.music-lyrics-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.music-lyrics-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.music-lyrics-empty-icon {
+  font-size: 32px;
+  opacity: 0.6;
+}
+
+.music-lyrics-empty-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.music-info__empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.music-info__empty-icon {
+  font-size: 48px;
+  opacity: 0.6;
+}
+
+.music-info__empty-text {
+  font-size: 16px;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.music-info__empty-hint {
+  font-size: 13px;
+  color: var(--text-secondary);
+}

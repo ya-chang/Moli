@@ -1,0 +1,15 @@
+{
+  "l1_core": {
+    "name": "",
+    "role": "女朋友",
+    "core_personality": [],
+    "speech_style": "",
+    "relationship_start": ""
+  },
+  "l2_important": {
+    "preferences": {},
+    "key_events": [],
+    "taboos": [],
+    "milestones": []
+  }
+}

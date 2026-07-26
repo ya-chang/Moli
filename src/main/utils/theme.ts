@@ -4,6 +4,7 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs'
 import { join } from 'path'
 import { logger } from './logger'
+import { PATHS } from './dataPath'
 
 export type ThemeName = 'default' | 'dark' | 'pink'
 
@@ -57,7 +58,7 @@ const THEMES: Record<ThemeName, ThemeConfig> = {
   }
 }
 
-const DATA_DIR = join(process.cwd(), 'data', 'global')
+const DATA_DIR = join(PATHS.base, 'global')
 const CONFIG_FILE = join(DATA_DIR, 'settings.json')
 
 export class ThemeManager {

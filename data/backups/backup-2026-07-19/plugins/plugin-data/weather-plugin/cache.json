@@ -1,0 +1,17 @@
+{
+  "city": "福州",
+  "timestamp": 1784359934613,
+  "data": {
+    "city": "福州",
+    "condition": "Rain With Thunderstorm",
+    "temp": "32°C",
+    "feelsLike": "36°C",
+    "humidity": "湿度71%",
+    "wind": "风速13km/h SSW",
+    "maxTemp": "36°C",
+    "minTemp": "24°C",
+    "uvIndex": "3",
+    "visibility": "10",
+    "description": "记得看天气预报~"
+  }
+}

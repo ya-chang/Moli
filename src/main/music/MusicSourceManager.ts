@@ -8,6 +8,7 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs'
 import { join } from 'path'
 import { app } from 'electron'
 import { logger } from '../utils/logger'
+import { PATHS } from '../utils/dataPath'
 
 const SOURCE_CACHE_DIR = 'sources'
 
@@ -33,10 +34,7 @@ interface MusicRequestHandler {
 }
 
 function getDataDir(): string {
-  if (app.isPackaged) {
-    return join(app.getPath('userData'), 'data')
-  }
-  return join(process.cwd(), 'data')
+  return PATHS.base
 }
 
 function getSourceCacheDir(): string {

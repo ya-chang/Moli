@@ -1,0 +1,57 @@
+# data/global/models.yaml
+# 模型配置文件 — API Key 从环境变量读取
+# DeepSeek 官方: https://api-docs.deepseek.com
+# MiMo 官方: https://mimo.mi.com/docs/zh-CN/quick-start/summary/model
+# MiMo 按量付费: https://api.xiaomimimo.com/v1
+# MiMo Token Plan: https://token-plan-cn.xiaomimimo.com/v1
+
+providers:
+  deepseek:
+    name: DeepSeek
+    baseUrl: https://api.deepseek.com
+    apiKey: ${DEEPSEEK_API_KEY}
+    models:
+      - deepseek-v4-flash
+      - deepseek-v4-pro
+      - deepseek-chat
+      - deepseek-reasoner
+    supportsCache: true
+  mimo:
+    name: MiMo
+    baseUrl: https://api.xiaomimimo.com/v1
+    apiKey: ${MIMO_API_KEY}
+    models:
+      - mimo-v2.5-pro
+      - mimo-v2.5
+    supportsCache: false
+  openai:
+    name: OpenAI
+    baseUrl: https://api.openai.com/v1
+    apiKey: ${OPENAI_API_KEY}
+    models:
+      - gpt-4o
+      - gpt-4o-mini
+      - gpt-4-turbo
+      - o1-preview
+    supportsCache: false
+  zhipu:
+    name: 智谱AI
+    baseUrl: https://open.bigmodel.cn/api/paas/v4
+    apiKey: ${ZHIPU_API_KEY}
+    models:
+      - glm-5.2
+      - glm-5.1
+      - glm-5
+      - glm-5-turbo
+      - glm-4.7
+      - glm-4.6
+      - glm-4.5
+      - glm-4.7-flash
+      - glm-4.6v-flash
+    supportsCache: false
+
+default:
+  provider: deepseek
+  model: deepseek-v4-flash
+  temperature: 0.7
+  maxTokens: 1024

@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react'
 import { useChatListStore } from '../../stores/chatListStore'
 import { useContactStore } from '../../stores/contactStore'
+import { kvGetSync, kvGet } from '../../ipc/storage'
 import './ContactList.css'
 
 export function ContactList(): React.JSX.Element {
@@ -20,6 +21,20 @@ export function ContactList(): React.JSX.Element {
     <div className="contact-list">
       <div className="contact-list__header">
         <span className="contact-list__title">通讯录</span>
+        <div className="contact-list__window-controls">
+          <button className="contact-list__win-btn" onClick={() => window.electronAPI?.minimize()} title="最小化">
+            <svg width="12" height="12" viewBox="0 0 12 12"><line x1="1" y1="6" x2="11" y2="6" stroke="currentColor" strokeWidth="1" /></svg>
+          </button>
+          <button className="contact-list__win-btn" onClick={() => window.electronAPI?.maximize()} title="最大化">
+            <svg width="12" height="12" viewBox="0 0 12 12"><rect x="1" y="1" width="10" height="10" fill="none" stroke="currentColor" strokeWidth="1" /></svg>
+          </button>
+          <button className="contact-list__win-btn contact-list__win-btn--close" onClick={() => window.electronAPI?.close()} title="关闭">
+            <svg width="12" height="12" viewBox="0 0 12 12">
+              <line x1="1" y1="1" x2="11" y2="11" stroke="currentColor" strokeWidth="1" />
+              <line x1="11" y1="1" x2="1" y2="11" stroke="currentColor" strokeWidth="1" />
+            </svg>
+          </button>
+        </div>
       </div>
 
       <div className="contact-list__search">
@@ -62,20 +77,18 @@ function ContactListItem({ session, selected, onClick }: {
   selected: boolean
   onClick: () => void
 }): React.JSX.Element {
-  const [customAvatar, setCustomAvatar] = useState<string | null>(null)
+  const [customAvatar, setCustomAvatar] = useState<string | null>(() => {
+    return kvGetSync<string>(`char-avatar-${session.id}`)
+  })
 
-  // avatarVersion 变化时重新读取头像
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem(`char-avatar-${session.id}`)
+    kvGet<string>(`char-avatar-${session.id}`).then((saved) => {
       setCustomAvatar(saved && saved.startsWith('data:image') ? saved : null)
-    } catch {
-      setCustomAvatar(null)
-    }
+    })
   }, [session.id, session.avatarVersion])
 
-  const isImage = customAvatar && customAvatar.startsWith('data:image')
-  const displayAvatar = isImage ? customAvatar : session.avatar
+  const isImage = (customAvatar && customAvatar.startsWith('data:image')) || session.avatar.startsWith('data:image')
+  const displayAvatar = isImage ? (customAvatar || session.avatar) : session.avatar
 
   return (
     <div

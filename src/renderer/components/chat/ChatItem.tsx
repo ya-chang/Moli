@@ -1,7 +1,8 @@
-﻿// src/renderer/components/chat/ChatItem.tsx
+// src/renderer/components/chat/ChatItem.tsx
 // 单个聊天列表项 — 支持图片头像
 
 import { useState, useEffect } from 'react'
+import { kvGetSync, kvGet } from '../../ipc/storage'
 import './ChatItem.css'
 
 interface ChatItemProps {
@@ -30,17 +31,18 @@ export function ChatItem({
   onClick,
   avatarVersion,
 }: ChatItemProps): React.JSX.Element {
-  const [customAvatar, setCustomAvatar] = useState<string | null>(null)
+  const [customAvatar, setCustomAvatar] = useState<string | null>(() => {
+    return kvGetSync<string>(`char-avatar-${id}`)
+  })
 
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem(`char-avatar-${id}`)
+    kvGet<string>(`char-avatar-${id}`).then((saved) => {
       setCustomAvatar(saved && saved.startsWith('data:image') ? saved : null)
-    } catch { setCustomAvatar(null) }
+    })
   }, [id, avatarVersion])
 
-  const isImage = customAvatar && customAvatar.startsWith('data:image')
-  const displayAvatar = isImage ? customAvatar : avatar
+  const isImage = (customAvatar && customAvatar.startsWith('data:image')) || avatar.startsWith('data:image')
+  const displayAvatar = isImage ? (customAvatar || avatar) : avatar
 
   return (
     <div

@@ -1,0 +1,93 @@
+[
+  {
+    "role": "user",
+    "content": "你好吗",
+    "type": "text",
+    "id": "msg_1783920851996_aw0b",
+    "characterId": "char_1783914401121",
+    "timestamp": 1783920851996,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "抱歉，消息发送失败，请重试",
+    "type": "text",
+    "id": "msg_1783920851996_9otu",
+    "characterId": "char_1783914401121",
+    "timestamp": 1783920851996,
+    "status": "error",
+    "error": "API 调用失败: 401 Authentication Fails (auth header format should be Bearer sk-...)"
+  },
+  {
+    "role": "user",
+    "content": "？",
+    "type": "text",
+    "id": "msg_1783947122609_8zhl",
+    "characterId": "char_1783914401121",
+    "timestamp": 1783947122609,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "？？",
+    "type": "text",
+    "id": "msg_1783947122609_tlrj",
+    "characterId": "char_1783914401121",
+    "timestamp": 1783947122609,
+    "status": "sent"
+  },
+  {
+    "role": "user",
+    "content": "1",
+    "type": "text",
+    "id": "msg_1783947125262_xieb",
+    "characterId": "char_1783914401121",
+    "timestamp": 1783947125262,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "怎么啦",
+    "type": "text",
+    "id": "msg_1783947125262_uwdi",
+    "characterId": "char_1783914401121",
+    "timestamp": 1783947125262,
+    "status": "sent"
+  },
+  {
+    "role": "user",
+    "content": "2",
+    "type": "text",
+    "id": "msg_1783947127559_5uye",
+    "characterId": "char_1783914401121",
+    "timestamp": 1783947127559,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "嗯？",
+    "type": "text",
+    "id": "msg_1783947127559_xk80",
+    "characterId": "char_1783914401121",
+    "timestamp": 1783947127559,
+    "status": "sent"
+  },
+  {
+    "role": "user",
+    "content": "抱歉",
+    "type": "text",
+    "id": "msg_1783947130872_0uvq",
+    "characterId": "char_1783914401121",
+    "timestamp": 1783947130872,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "嗯？",
+    "type": "text",
+    "id": "msg_1783947130872_scik",
+    "characterId": "char_1783914401121",
+    "timestamp": 1783947130872,
+    "status": "sent"
+  }
+]

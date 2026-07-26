@@ -1,0 +1,396 @@
+/* src/renderer/styles/emoji.css */
+/* 表情包样式 — 微信风格 */
+
+/* ==================== 表情面板 ==================== */
+.emoji-panel {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  width: 360px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  z-index: 1000;
+}
+
+/* Tab 切换 */
+.emoji-panel__tabs {
+  display: flex;
+  border-bottom: 1px solid #e5e5e5;
+  background: #f7f7f7;
+}
+
+.emoji-panel__tab {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.emoji-panel__tab:hover {
+  color: #333;
+}
+
+.emoji-panel__tab--active {
+  color: #07c160;
+  border-bottom: 2px solid #07c160;
+}
+
+/* 内容区域 */
+.emoji-panel__content {
+  padding: 12px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.emoji-panel__grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 8px;
+}
+
+/* 系统表情项 */
+.emoji-panel__item {
+  width: 100%;
+  aspect-ratio: 1;
+  border: none;
+  background: transparent;
+  font-size: 24px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: transform 0.15s, background 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emoji-panel__item:hover {
+  background: #f0f0f0;
+  transform: scale(1.1);
+}
+
+/* 自定义表情包项 */
+.emoji-panel__custom-item {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.15s;
+  background: #f5f5f5;
+}
+
+.emoji-panel__custom-item:hover {
+  transform: scale(1.05);
+}
+
+.emoji-panel__custom-item--selected {
+  outline: 2px solid #07c160;
+}
+
+.emoji-panel__custom-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* 删除按钮 */
+.emoji-panel__delete-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  padding: 4px 8px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.emoji-panel__delete-btn:hover {
+  background: rgba(255, 0, 0, 0.8);
+}
+
+/* 添加按钮 */
+.emoji-panel__add-btn {
+  width: 100%;
+  aspect-ratio: 1;
+  border: 2px dashed #ccc;
+  background: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #999;
+  transition: all 0.2s;
+}
+
+.emoji-panel__add-btn:hover {
+  border-color: #07c160;
+  color: #07c160;
+}
+
+/* 底部提示 */
+.emoji-panel__footer {
+  padding: 8px 12px;
+  text-align: center;
+  font-size: 12px;
+  color: #999;
+  background: #f7f7f7;
+  border-top: 1px solid #e5e5e5;
+}
+
+/* ==================== 上传弹窗 ==================== */
+.emoji-uploader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.emoji-uploader {
+  width: 400px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.emoji-uploader__title {
+  margin: 0 0 20px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+}
+
+/* 上传区域 */
+.emoji-uploader__preview {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 20px;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s;
+}
+
+.emoji-uploader__preview:hover {
+  border-color: #07c160;
+}
+
+.emoji-uploader__preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.emoji-uploader__placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #999;
+}
+
+.emoji-uploader__placeholder-icon {
+  font-size: 32px;
+  line-height: 1;
+}
+
+.emoji-uploader__file-input {
+  display: none;
+}
+
+/* 表单字段 */
+.emoji-uploader__field {
+  margin-bottom: 16px;
+}
+
+.emoji-uploader__label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #666;
+}
+
+.emoji-uploader__input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.emoji-uploader__input:focus {
+  outline: none;
+  border-color: #07c160;
+}
+
+/* 情绪选择 */
+.emoji-uploader__emotions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.emoji-uploader__emotion-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  background: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.emoji-uploader__emotion-btn:hover {
+  border-color: #07c160;
+}
+
+.emoji-uploader__emotion-btn--active {
+  background: #07c160;
+  border-color: #07c160;
+  color: #fff;
+}
+
+/* 按钮 */
+.emoji-uploader__actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.emoji-uploader__btn {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.emoji-uploader__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.emoji-uploader__btn--cancel {
+  background: #f5f5f5;
+  color: #666;
+}
+
+.emoji-uploader__btn--cancel:hover:not(:disabled) {
+  background: #e5e5e5;
+}
+
+.emoji-uploader__btn--confirm {
+  background: #07c160;
+  color: #fff;
+}
+
+.emoji-uploader__btn--confirm:hover:not(:disabled) {
+  background: #06ad56;
+}
+
+/* ==================== 表情包消息（微信风格） ==================== */
+.emoji-message {
+  display: inline-block;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.emoji-message img {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  border-radius: 4px;
+  display: block;
+}
+
+/* 用户发送的表情包（右对齐） */
+.message-bubble--emoji.message-bubble--user {
+  background: transparent;
+  padding: 0;
+  border: none;
+}
+
+.message-bubble--emoji.message-bubble--user .emoji-message img {
+  margin-left: auto;
+}
+
+/* AI发送的表情包（左对齐） */
+.message-bubble--emoji.message-bubble--assistant {
+  background: transparent;
+  padding: 0;
+  border: none;
+}
+
+.message-bubble--emoji.message-bubble--assistant .emoji-message img {
+  margin-right: auto;
+}
+
+/* ==================== 右键菜单 ==================== */
+.emoji-panel__context-menu {
+  position: fixed;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  padding: 4px 0;
+  z-index: 2000;
+  min-width: 120px;
+}
+
+.emoji-panel__context-menu-item {
+  display: block;
+  width: 100%;
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.emoji-panel__context-menu-item:hover {
+  background: #f5f5f5;
+}
+
+.emoji-panel__context-menu-item--danger {
+  color: #e74c3c;
+}
+
+.emoji-panel__context-menu-item--danger:hover {
+  background: #fef0f0;
+}

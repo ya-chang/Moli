@@ -1,0 +1,59 @@
+{
+  "state": {
+    "happiness": 100,
+    "sadness": 10,
+    "anger": 0,
+    "anxiety": 5,
+    "affection": 85,
+    "intimacy": 51,
+    "trust": 40,
+    "energy": 80,
+    "missLevel": 20,
+    "patience": 80,
+    "currentMood": "happy",
+    "lastInteraction": "2026-07-13T08:16:29.622Z",
+    "conversationStreak": 25
+  },
+  "emotionalMemory": [
+    {
+      "event": "收到爱意表达",
+      "impact": 20,
+      "timestamp": "2026-07-13T06:38:35.891Z"
+    },
+    {
+      "event": "收到爱意表达",
+      "impact": 20,
+      "timestamp": "2026-07-13T06:41:31.060Z"
+    },
+    {
+      "event": "收到爱意表达",
+      "impact": 20,
+      "timestamp": "2026-07-13T06:56:08.952Z"
+    },
+    {
+      "event": "收到爱意表达",
+      "impact": 20,
+      "timestamp": "2026-07-13T06:56:48.556Z"
+    },
+    {
+      "event": "收到爱意表达",
+      "impact": 20,
+      "timestamp": "2026-07-13T06:57:11.381Z"
+    },
+    {
+      "event": "收到爱意表达",
+      "impact": 20,
+      "timestamp": "2026-07-13T07:00:28.088Z"
+    },
+    {
+      "event": "收到爱意表达",
+      "impact": 20,
+      "timestamp": "2026-07-13T07:59:48.521Z"
+    }
+  ],
+  "reconciliation": {
+    "isFighting": false,
+    "lastFightTime": null,
+    "lastReconciliationTime": null
+  }
+}

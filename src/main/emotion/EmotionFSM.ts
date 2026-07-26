@@ -71,6 +71,11 @@ export class EmotionFSM {
     const lastInteraction = new Date(this.state.lastInteraction)
     const timeSinceLastMessage = (now.getTime() - lastInteraction.getTime()) / 1000 / 60
 
+    // 应用情感衰减（基于U0的cfg_decay思想）
+    if (timeSinceLastMessage > 0) {
+      this.applyEmotionDecay(timeSinceLastMessage / 60) // 转换为小时
+    }
+
     // 沉默超过2小时 → 想你
     if (timeSinceLastMessage > 120) {
       this.state.missLevel = Math.min(100, this.state.missLevel + 10)
@@ -101,6 +106,11 @@ export class EmotionFSM {
       this.state.affection = Math.min(100, this.state.affection + 2)
     }
 
+    // 用户开心 → 角色也开心
+    if (userEmotion === 'happy' || userEmotion === 'excited') {
+      this.state.happiness = Math.min(100, this.state.happiness + 5)
+    }
+
     // 更新状态
     this.state.lastInteraction = now.toISOString()
     this.state.conversationStreak += 1
@@ -110,6 +120,34 @@ export class EmotionFSM {
 
     this.save()
     return { ...this.state }
+  }
+
+  /**
+   * 情感衰减 - 灵感来源: U0的cfg_decay
+   * U0: guidance = guidance + (cfg_min - guidance) * progress
+   * 这里: emotion = baseline + (emotion - baseline) * decayFactor
+   */
+  private applyEmotionDecay(hoursSinceLastInteraction: number): void {
+    const decayRate = 0.01 // 每小时衰减 1%
+    const factor = Math.max(0, 1 - hoursSinceLastInteraction * decayRate)
+
+    // 积极情感衰减到基线
+    this.state.happiness = this.decay(this.state.happiness, 70, factor)
+    this.state.affection = this.decay(this.state.affection, 50, factor)
+    this.state.intimacy = this.decay(this.state.intimacy, 30, factor)
+    
+    // 消极情感衰减
+    this.state.anger = this.decay(this.state.anger, 0, factor)
+    this.state.sadness = this.decay(this.state.sadness, 10, factor)
+    
+    // 思念上升（虚拟伴侣核心体验）
+    if (hoursSinceLastInteraction > 2) {
+      this.state.missLevel = Math.min(100, this.state.missLevel + hoursSinceLastInteraction * 2)
+    }
+  }
+
+  private decay(current: number, baseline: number, factor: number): number {
+    return baseline + (current - baseline) * factor
   }
 
   private calculateMood(): string {

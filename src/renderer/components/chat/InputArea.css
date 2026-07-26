@@ -153,25 +153,48 @@
   background: var(--primary-hover);
 }
 
-/* 移动端适配 */
-@media (max-width: 768px) {
-  .input-area__footer {
-    padding: 6px 12px;
-  }
+/* 图片预览 */
+.input-area__images {
+  display: flex;
+  gap: 8px;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--border-color);
+  flex-wrap: wrap;
+}
 
-  .input-area__footer-hint {
-    display: none;
-  }
+.input-area__image-preview {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
 
-  .input-area__send-btn {
-    padding: 8px 16px;
-    font-size: 14px;
-    border-radius: 20px;
-  }
+.input-area__image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
-  .input-area__tool-btn {
-    width: 36px;
-    height: 36px;
-    font-size: 20px;
-  }
+.input-area__image-remove {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.input-area__image-remove:hover {
+  background: rgba(255, 0, 0, 0.8);
 }

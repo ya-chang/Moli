@@ -1,0 +1,15 @@
+{
+  "happiness": 70,
+  "sadness": 10,
+  "anger": 0,
+  "anxiety": 5,
+  "affection": 50,
+  "intimacy": 30,
+  "trust": 40,
+  "energy": 80,
+  "missLevel": 20,
+  "patience": 80,
+  "currentMood": "happy",
+  "lastInteraction": "2026-07-15T04:20:23.006Z",
+  "conversationStreak": 0
+}

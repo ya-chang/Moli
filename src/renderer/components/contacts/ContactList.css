@@ -421,3 +421,389 @@
   white-space: pre-wrap;
   word-break: break-word;
 }
+
+/* 输入框 */
+.contact-detail__input {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: var(--font-size-sm);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.contact-detail__input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+select.contact-detail__input {
+  cursor: pointer;
+}
+
+/* 开关 */
+.contact-detail__toggle {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 22px;
+}
+
+.contact-detail__toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.contact-detail__toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.3s;
+  border-radius: 22px;
+}
+
+.contact-detail__toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+.contact-detail__toggle input:checked + .contact-detail__toggle-slider {
+  background-color: var(--primary-color);
+}
+
+.contact-detail__toggle input:checked + .contact-detail__toggle-slider:before {
+  transform: translateX(18px);
+}
+
+/* 提示文字 */
+.contact-detail__hint {
+  font-size: 12px;
+  color: var(--text-secondary);
+  padding: 4px 0;
+}
+
+/* 保存按钮 */
+.contact-detail__save-btn {
+  width: 100%;
+  padding: 8px 16px;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.contact-detail__save-btn:hover {
+  background: var(--primary-hover);
+}
+
+/* 主动消息设置 - 时间输入 */
+.contact-detail__time-input {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.contact-detail__time-input__number {
+  width: 50px;
+  padding: 6px 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 13px;
+  text-align: center;
+  background: var(--input-bg, #f5f5f5);
+  color: var(--text-primary);
+}
+
+.contact-detail__time-input__number:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+/* 主动消息设置 - 复选框组 */
+.contact-detail__checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.contact-detail__checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.contact-detail__checkbox input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--primary-color);
+  cursor: pointer;
+}
+
+/* 主动消息设置 - 延迟输入 */
+.contact-detail__delay-input {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.contact-detail__delay-input span {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* 主动消息设置 - 测试按钮 */
+.contact-detail__test-btn {
+  padding: 6px 12px;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.contact-detail__test-btn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.contact-detail__test-btn:active {
+  transform: translateY(0);
+}
+
+/* 通知弹窗设置面板 */
+.notification-settings-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.notification-settings-panel {
+  background: var(--bg-primary, #fff);
+  border-radius: 12px;
+  width: 420px;
+  max-width: 90vw;
+  max-height: 80vh;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.notification-settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color, #eee);
+}
+
+.notification-settings-header h4 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.notification-settings-close {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  font-size: 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  color: var(--text-secondary, #999);
+}
+
+.notification-settings-close:hover {
+  background: var(--bg-secondary, #f5f5f5);
+}
+
+/* Tab 切换 */
+.notification-settings-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-color, #eee);
+}
+
+.notification-settings-tab {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  cursor: pointer;
+  color: var(--text-secondary, #666);
+  transition: all 0.2s;
+}
+
+.notification-settings-tab:hover {
+  background: var(--bg-secondary, #f5f5f5);
+}
+
+.notification-settings-tab.active {
+  color: var(--primary-color, #07c160);
+  border-bottom: 2px solid var(--primary-color, #07c160);
+}
+
+/* 内容区 */
+.notification-settings-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.notification-settings-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.notification-settings-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.notification-settings-label {
+  min-width: 80px;
+  font-size: 14px;
+  color: var(--text-primary, #333);
+}
+
+.notification-settings-time {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.notification-settings-time span {
+  font-size: 14px;
+  color: var(--text-secondary, #999);
+}
+
+.notification-settings-input-sm {
+  width: 70px;
+  padding: 8px;
+  border: 1px solid var(--border-color, #ddd);
+  border-radius: 6px;
+  font-size: 14px;
+  text-align: center;
+  background: var(--bg-secondary, #f5f5f5);
+  color: var(--text-primary, #333);
+  outline: none;
+}
+
+.notification-settings-input-sm:focus {
+  border-color: var(--primary-color, #07c160);
+}
+
+.notification-settings-unit {
+  font-size: 12px;
+  color: var(--text-secondary, #999);
+}
+
+.notification-settings-color {
+  width: 40px;
+  height: 32px;
+  padding: 2px;
+  border: 1px solid var(--border-color, #ddd);
+  border-radius: 6px;
+  cursor: pointer;
+  background: var(--bg-secondary, #f5f5f5);
+}
+
+.notification-settings-color:focus {
+  border-color: var(--primary-color, #07c160);
+}
+
+/* Toggle 开关 */
+.notification-settings-toggle {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.notification-settings-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.notification-settings-toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: var(--border-color, #ddd);
+  border-radius: 24px;
+  transition: 0.3s;
+}
+
+.notification-settings-toggle-slider::before {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  left: 2px;
+  bottom: 2px;
+  background: white;
+  border-radius: 50%;
+  transition: 0.3s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.notification-settings-toggle input:checked + .notification-settings-toggle-slider {
+  background: var(--primary-color, #07c160);
+}
+
+.notification-settings-toggle input:checked + .notification-settings-toggle-slider::before {
+  transform: translateX(20px);
+}
+
+/* 底部测试按钮 */
+.notification-settings-footer {
+  padding: 16px 20px;
+  border-top: 1px solid var(--border-color, #eee);
+}
+
+.notification-settings-test-btn {
+  width: 100%;
+  padding: 10px;
+  background: var(--primary-color, #07c160);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.notification-settings-test-btn:hover {
+  background: var(--primary-hover, #06a550);
+}

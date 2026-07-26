@@ -1,11 +1,13 @@
 // src/renderer/components/chat/MessageBubble.tsx
-// 消息气泡 — 支持文本/拍一拍/红包/引用/语音等类型
+// 消息气泡 — 支持文本/拍一拍/红包/引用/语音/表情包/图片等类型
 
 import { useRef } from 'react'
 import { QuoteMessage } from './QuoteMessage'
 import { PatMessage } from './PatMessage'
 import { RedPacket } from './RedPacket'
 import { VoiceMessage } from '../tts/VoiceMessage'
+import { EmojiMessage } from '../emojis/EmojiMessage'
+import { ImageMessage } from './ImageMessage'
 import { useUserStore } from '../../stores/userStore'
 import type { QuoteMeta, PatMeta, RedPacketMeta } from '@shared/types'
 import './MessageBubble.css'
@@ -22,6 +24,9 @@ interface MessageBubbleProps {
   onQuote?: (messageId: string) => void
   onPat?: (targetName: string, suffix: string) => void
   highlight?: boolean
+  selectMode?: boolean
+  selected?: boolean
+  onSelect?: (id: string, selected: boolean) => void
 }
 
 export function MessageBubble({
@@ -36,6 +41,9 @@ export function MessageBubble({
   onQuote,
   onPat,
   highlight,
+  selectMode = false,
+  selected = false,
+  onSelect,
 }: MessageBubbleProps): React.JSX.Element {
   const userAvatar = useUserStore((s) => s.avatar)
   const setUserAvatar = useUserStore((s) => s.setAvatar)
@@ -82,7 +90,7 @@ export function MessageBubble({
   }
 
   return (
-    <div id={`msg-${id}`} className={`message-row ${isUser ? 'message-row--self' : 'message-row--other'} ${highlight ? 'message-row--highlight' : ''}`}>
+    <div id={`msg-${id}`} className={`message-row ${isUser ? 'message-row--self' : 'message-row--other'} ${highlight ? 'message-row--highlight' : ''} ${selectMode ? 'message-row--select-mode' : ''} ${selected ? 'message-row--selected' : ''}`}>
       <input
         ref={fileInputRef}
         type="file"
@@ -90,6 +98,16 @@ export function MessageBubble({
         onChange={handleAvatarUpload}
         style={{ display: 'none' }}
       />
+
+      {selectMode && (
+        <label className="message-checkbox" onClick={(e) => e.stopPropagation()}>
+          <input
+            type="checkbox"
+            checked={selected}
+            onChange={(e) => onSelect?.(id, e.target.checked)}
+          />
+        </label>
+      )}
 
       <div
         className="message-avatar"
@@ -118,9 +136,22 @@ export function MessageBubble({
             message={(metadata as unknown as RedPacketMeta).message}
             opened={(metadata as unknown as RedPacketMeta).opened}
           />
+        ) : type === 'emoji' && metadata ? (
+          <EmojiMessage
+            emojiId={metadata.emojiId as string}
+            filePath={metadata.filePath as string}
+            isUser={isUser}
+            characterId={metadata.characterId as string}
+          />
+        ) : type === 'image' && metadata?.images ? (
+          <ImageMessage
+            images={metadata.images as string[]}
+            content={content}
+            isUser={isUser}
+          />
         ) : (
           <div
-            className={`message-bubble ${isUser ? 'message-bubble--self' : 'message-bubble--other'}`}
+            className={`message-bubble ${isUser ? 'message-bubble--self' : 'message-bubble--other'} ${status === 'error' ? 'message-bubble--error' : ''}`}
             onContextMenu={(e) => {
               e.preventDefault()
               onQuote?.(id)
@@ -131,6 +162,11 @@ export function MessageBubble({
                 <span className="typing-dot" />
                 <span className="typing-dot" />
                 <span className="typing-dot" />
+              </span>
+            ) : status === 'error' ? (
+              <span className="message-text message-text--error">
+                <span className="message-error-icon">⚠️</span>
+                {content || '消息发送失败'}
               </span>
             ) : (
               <>

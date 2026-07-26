@@ -1,10 +1,10 @@
 // src/renderer/stores/chatBgStore.ts
-// 聊天背景状态 — 设置面板和 ChatWindow 之间同步
+// 聊天背景状态
 
 import { create } from 'zustand'
+import { kvSetSync } from '../ipc/storage'
 
 interface ChatBgState {
-  // key: characterId, value: background
   backgrounds: Record<string, string>
   getBg: (characterId: string) => string
   setBg: (characterId: string, bg: string) => void
@@ -18,9 +18,7 @@ export const useChatBgStore = create<ChatBgState>((set, get) => ({
   },
 
   setBg: (characterId: string, bg: string) => {
-    // 保存到 localStorage
-    localStorage.setItem(`chatBg-${characterId}`, bg)
-    // 更新内存状态
+    kvSetSync(`chatBg-${characterId}`, bg)
     set((state) => ({
       backgrounds: { ...state.backgrounds, [characterId]: bg }
     }))

@@ -69,19 +69,16 @@ export function VoicePanel({ onClose, characterId: propCharId }: VoicePanelProps
           if (charData.ttsModel) setSelectedModel(charData.ttsModel as 'preset' | 'voicedesign' | 'voiceclone')
           if (charData.ttsVoiceDesignPrompt) setVoiceDesignPrompt(charData.ttsVoiceDesignPrompt as string)
           if (charData.ttsCloneAudioName) setCloneAudioName(charData.ttsCloneAudioName as string)
-          if (charData.apiKey && typeof charData.apiKey === 'string' && charData.apiKey.trim()) {
-            setApiKey(charData.apiKey)
-            // 初始化 TTS 服务
-            const result = await window.electronAPI?.invoke('tts:init', { apiKey: charData.apiKey }) as { success: boolean }
-            if (result?.success) setApiKeySaved(true)
-          }
         }
       }
 
-      // 检查 TTS 状态
+      // 从后端加载独立的 TTS API Key（不是角色的聊天 Key）
       try {
-        const ttsState = await window.electronAPI?.invoke('tts:get-state') as Record<string, unknown> | null
-        if (ttsState) setApiKeySaved(true)
+        const ttsKeyResult = await window.electronAPI?.invoke('tts:get-api-key') as { apiKey: string; hasKey: boolean } | null
+        if (ttsKeyResult?.hasKey) {
+          setApiKey(ttsKeyResult.apiKey)
+          setApiKeySaved(true)
+        }
       } catch { /* ignore */ }
 
       const voicesResult = await window.electronAPI?.invoke('tts:get-voices')
@@ -103,15 +100,10 @@ export function VoicePanel({ onClose, characterId: propCharId }: VoicePanelProps
     if (!currentCharId) return
     const newEnabled = !ttsEnabled
 
-    if (newEnabled) {
-      try {
-        const charList = await window.electronAPI?.invoke('character:list') as Array<Record<string, unknown>> | null
-        const charData = charList?.find(c => c.id === currentCharId)
-        if (charData?.apiKey && typeof charData.apiKey === 'string' && charData.apiKey.trim()) {
-          await window.electronAPI?.invoke('tts:init', { apiKey: charData.apiKey as string })
-          setApiKeySaved(true)
-        }
-      } catch { /* ignore */ }
+    // 启用时检查 TTS Key 是否已配置
+    if (newEnabled && !apiKeySaved) {
+      alert('请先配置 TTS API Key（MiMo）')
+      return
     }
 
     setTtsEnabled(newEnabled)
@@ -120,7 +112,6 @@ export function VoicePanel({ onClose, characterId: propCharId }: VoicePanelProps
       id: currentCharId,
       updates: { ttsEnabled: newEnabled, ttsVoice: selectedVoice, ttsVoiceName: voiceName }
     })
-    window.electronAPI?.send('tts:state-changed', { enabled: newEnabled })
   }
 
   const handleVoiceChange = async (voiceId: string): Promise<void> => {
@@ -281,14 +272,8 @@ export function VoicePanel({ onClose, characterId: propCharId }: VoicePanelProps
   const handlePreview = async (voiceId: string): Promise<void> => {
     if (previewing) return
     if (!apiKeySaved) {
-      try {
-        const charList = await window.electronAPI?.invoke('character:list') as Array<Record<string, unknown>> | null
-        const charData = charList?.find(c => c.id === currentCharId)
-        if (charData?.apiKey && typeof charData.apiKey === 'string' && charData.apiKey.trim()) {
-          const result = await window.electronAPI?.invoke('tts:init', { apiKey: charData.apiKey }) as { success: boolean }
-          if (result?.success) setApiKeySaved(true)
-        }
-      } catch { /* ignore */ }
+      alert('请先配置 TTS API Key（MiMo）')
+      return
     }
     setPreviewing(voiceId)
     try {

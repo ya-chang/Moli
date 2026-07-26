@@ -1,0 +1,54 @@
+/* src/renderer/components/emojis/EmojiMessage.css */
+/* 表情包消息样式 — 微信风格 */
+
+.emoji-message {
+  display: inline-block;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.emoji-message__img {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  border-radius: 4px;
+  display: block;
+}
+
+/* 用户发送的表情包（右对齐） */
+.emoji-message--user {
+  margin-left: auto;
+}
+
+/* AI发送的表情包（左对齐） */
+.emoji-message--assistant {
+  margin-right: auto;
+}
+
+/* 加载中 */
+.emoji-message__loading {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f0f0;
+  border-radius: 4px;
+  color: #999;
+}
+
+/* 加载失败 */
+.emoji-message__error {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f0f0;
+  border-radius: 4px;
+  color: #999;
+  font-size: 12px;
+}

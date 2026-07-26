@@ -1,0 +1,47 @@
+{
+  "emojis": [
+    {
+      "id": "31345a69-fac4-4953-b57f-245417ec372a",
+      "file": "31345a69-fac4-4953-b57f-245417ec372a.jpg",
+      "originalName": "006CXrEjly1hchyh1be67j30u00u0n2f.jpg",
+      "tags": [],
+      "emotion": "neutral",
+      "usageCount": 0,
+      "lastUsed": null,
+      "addedAt": "2026-07-16T13:49:00.525Z"
+    },
+    {
+      "id": "5d629dc5-c442-48c0-af39-728936795e63",
+      "file": "5d629dc5-c442-48c0-af39-728936795e63.jpg",
+      "originalName": "temp_c05e9dcc-db32-4f88-81f4-af0d0a7451da.jpg",
+      "tags": [
+        "周五",
+        "上班"
+      ],
+      "emotion": "happy",
+      "usageCount": 0,
+      "lastUsed": null,
+      "addedAt": "2026-07-16T13:51:33.003Z"
+    },
+    {
+      "id": "0009a718-e2f1-4486-a4c8-baece88e375a",
+      "file": "0009a718-e2f1-4486-a4c8-baece88e375a.jpg",
+      "originalName": "temp_f8ee3d61-1fab-486d-a16d-26fd14e0e5d1.jpg",
+      "tags": [],
+      "emotion": "neutral",
+      "usageCount": 0,
+      "lastUsed": null,
+      "addedAt": "2026-07-16T13:54:14.321Z"
+    }
+  ],
+  "config": {
+    "maxCount": 50,
+    "maxSize": 5242880,
+    "frequencyMode": "follow_user"
+  },
+  "stats": {
+    "totalMessages": 0,
+    "emojiMessages": 0,
+    "userEmojiRatio": 0
+  }
+}

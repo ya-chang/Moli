@@ -6,8 +6,9 @@ import { existsSync } from 'fs'
 import { join } from 'path'
 import type { SyncAdapter, MergeResult, TableMergeStrategy } from './SyncAdapter'
 import { DEFAULT_MERGE_STRATEGY } from './SyncAdapter'
+import { PATHS } from '../utils/dataPath'
 
-const DATA_DIR = join(process.cwd(), 'data', 'sync')
+const DATA_DIR = join(PATHS.base, 'sync')
 
 export class LocalAdapter implements SyncAdapter {
   private mergeStrategy: TableMergeStrategy

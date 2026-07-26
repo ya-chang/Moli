@@ -3,7 +3,7 @@
 
 import { create } from 'zustand'
 
-export type ViewType = 'chat' | 'contacts' | 'moments'
+export type ViewType = 'chat' | 'contacts' | 'moments' | 'music'
 
 interface UIState {
   currentView: ViewType

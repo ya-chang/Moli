@@ -213,3 +213,47 @@
     opacity: 1;
   }
 }
+
+/* 删除选择模式 */
+.message-row--select-mode {
+  padding-left: 32px;
+  position: relative;
+}
+
+.message-checkbox {
+  position: absolute;
+  left: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  z-index: 10;
+}
+
+.message-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #07c160;
+}
+
+.message-row--selected {
+  background-color: rgba(7, 193, 96, 0.08);
+}
+
+/* 错误状态 */
+.message-bubble--error {
+  background: #fff0f0 !important;
+  border: 1px solid #ffccc7 !important;
+}
+
+.message-text--error {
+  color: #e74c3c;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.message-error-icon {
+  font-size: 14px;
+}

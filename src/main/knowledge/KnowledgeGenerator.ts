@@ -23,10 +23,14 @@ export interface GenerateContext {
 }
 
 export class KnowledgeGenerator {
-  private router = new ModelRouter()
+  private router: ModelRouter
   private managers: Map<string, KnowledgeManager> = new Map()
   private counters: Map<string, number> = new Map()
   private logger: typeof logger = logger
+
+  constructor(router?: ModelRouter) {
+    this.router = router || new ModelRouter()
+  }
 
   private getManager(characterId: string): KnowledgeManager {
     if (!this.managers.has(characterId)) {
@@ -137,11 +141,21 @@ ${currentStyle}
         return
       }
 
-      // 追加到 style_learning.md
-      const timestamp = new Date().toLocaleDateString('zh-CN')
-      const entry = `\n- ${result} [隐式·${timestamp}]`
-      const updated = currentStyle + entry
-      manager.writeStyleLearning(updated)
+      // 归档旧风格学习（超过 20 条时）
+      const lines = currentStyle.split('\n').filter(l => l.trim().startsWith('-'))
+      if (lines.length > 20) {
+        const toArchive = lines.slice(0, lines.length - 20).join('\n')
+        const keep = lines.slice(lines.length - 20).join('\n')
+        manager.appendArchive('style_learning', toArchive)
+        manager.writeStyleLearning('# 风格学习记录\n\n## 用户偏好（自动学习）\n\n' + keep)
+        logger.info(`角色 ${ctx.characterId} 风格学习已归档 ${lines.length - 20} 条`)
+      } else {
+        // 追加到 style_learning.md
+        const timestamp = new Date().toLocaleDateString('zh-CN')
+        const entry = `\n- ${result} [隐式·${timestamp}]`
+        const updated = currentStyle + entry
+        manager.writeStyleLearning(updated)
+      }
       logger.info(`角色 ${ctx.characterId} 风格学习已更新`)
     } catch (error) {
       logger.error(`风格学习生成失败: ${ctx.characterId}`, error)
@@ -202,6 +216,14 @@ ${conversationText}`
         apiKey: ctx.apiKey,
         baseUrl: ctx.baseUrl
       })
+
+      // 归档旧摘要（如果有的话）
+      const currentSummary = manager.readChatSummary()
+      const summaryBody = currentSummary.replace(/^#.*\n>.*\n\n?/m, '').trim()
+      if (summaryBody.length > 50) {
+        manager.appendArchive('chat_summary', summaryBody)
+        logger.info(`角色 ${ctx.characterId} 旧摘要已归档`)
+      }
 
       const header = '# 对话摘要\n\n> AI 会自动压缩旧对话，保留脉络\n\n'
       manager.writeChatSummary(header + response.content.trim())
@@ -279,11 +301,114 @@ ${conversationText}
         baseUrl: ctx.baseUrl
       })
 
+      // 归档旧画像（如果有的话）
+      const profileBody = currentProfile.replace(/^#.*\n>.*\n\n?/m, '').trim()
+      if (profileBody.length > 50) {
+        manager.appendArchive('user_profile', profileBody)
+        logger.info(`角色 ${ctx.characterId} 旧画像已归档`)
+      }
+
       const header = '# 用户画像\n\n> AI 会自动从对话中提取关于你的信息\n\n'
       manager.writeUserProfile(header + response.content.trim())
       logger.info(`角色 ${ctx.characterId} 用户画像已更新`)
     } catch (error) {
       logger.error(`用户画像生成失败: ${ctx.characterId}`, error)
+    }
+  }
+
+  /**
+   * 提取结构化记忆 — 分析对话提取偏好/事件/禁忌
+   * 每 20 条触发
+   */
+  async generateStructuredMemory(ctx: GenerateContext): Promise<void> {
+    if (!this.hasValidApiKey(ctx)) return
+
+    const manager = this.getManager(ctx.characterId)
+    const recentMessages = ctx.messages.slice(-20)
+
+    if (recentMessages.length < 5) return
+
+    const conversationText = recentMessages
+      .map((m) => `${m.role === 'user' ? '用户' : ctx.characterName}：${m.content}`)
+      .join('\n')
+
+    const messages: ChatMessage[] = [
+      {
+        role: 'system',
+        content: `你是一个记忆提取器。从对话中提取需要记录到结构化记忆中的信息。
+
+请以 JSON 格式输出（不要输出其他内容）：
+{
+  "preferences": {
+    "类别名": { "likes": ["喜欢的东西"], "dislikes": ["不喜欢的东西"] }
+  },
+  "events": [
+    { "event": "事件描述", "details": "细节", "emotional_weight": "high/medium/low" }
+  ],
+  "taboos": ["禁忌话题"]
+}
+
+规则：
+1. 只提取用户明确提到或暗示的信息
+2. 类别名用英文：food/music/game/movie/hobby/work/travel/pet/sleep
+3. 如果没有新发现，返回空 JSON：{}
+4. 每次最多提取 3 个偏好、2 个事件、1 个禁忌`
+      },
+      {
+        role: 'user',
+        content: `对话内容：\n${conversationText}`
+      }
+    ]
+
+    try {
+      const config = loadModelsConfig()
+      const defaultModel = config.default
+
+      const response = await this.router.chat({
+        messages,
+        provider: ctx.apiKey ? 'custom' : defaultModel.provider,
+        model: defaultModel.model,
+        temperature: 0.2,
+        maxTokens: 800,
+        apiKey: ctx.apiKey,
+        baseUrl: ctx.baseUrl
+      })
+
+      const result = response.content.trim()
+      // 尝试解析 JSON
+      const jsonMatch = result.match(/\{[\s\S]*\}/)
+      if (!jsonMatch) return
+
+      const extracted = JSON.parse(jsonMatch[0]) as {
+        preferences?: Record<string, { likes?: string[]; dislikes?: string[] }>
+        events?: Array<{ event: string; details?: string; emotional_weight?: string }>
+        taboos?: string[]
+      }
+
+      // 更新结构化记忆
+      if (extracted.preferences) {
+        for (const [category, pref] of Object.entries(extracted.preferences)) {
+          if (pref.likes?.length || pref.dislikes?.length) {
+            manager.updatePreference(category, pref.likes || [], pref.dislikes || [])
+          }
+        }
+      }
+
+      if (extracted.events) {
+        for (const event of extracted.events) {
+          manager.addKeyEvent(event.event, event.details || '', (event.emotional_weight as any) || 'medium')
+        }
+      }
+
+      if (extracted.taboos) {
+        for (const taboo of extracted.taboos) {
+          manager.addTaboo(taboo)
+        }
+      }
+
+      logger.info(`角色 ${ctx.characterId} 结构化记忆已更新`)
+    } catch (error) {
+      logger.error(`结构化记忆提取失败: ${ctx.characterId}`, error)
     }
   }
 }

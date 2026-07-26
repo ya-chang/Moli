@@ -5,8 +5,56 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync, appendFileSync } from 'fs'
 import { join } from 'path'
 import { logger } from '../utils/logger'
+import { PATHS } from '../utils/dataPath'
 
-const DATA_ROOT = join(process.cwd(), 'data', 'characters')
+const DATA_ROOT = PATHS.characters
+
+// ========== 结构化记忆类型定义 ==========
+
+export interface StructuredMemory {
+  // L1 核心记忆（永远注入）
+  l1_core: {
+    name: string
+    role: string
+    core_personality: string[]
+    speech_style: string
+    relationship_start: string
+  }
+  // L2 重要记忆（按话题注入）
+  l2_important: {
+    preferences: Record<string, {
+      likes: string[]
+      dislikes: string[]
+      weight: 'high' | 'medium' | 'low'
+      lastMentioned: string
+    }>
+    key_events: Array<{
+      date: string
+      event: string
+      details: string
+      emotional_weight: 'high' | 'medium' | 'low'
+      lastMentioned: string
+    }>
+    taboos: string[]
+    milestones: string[]
+  }
+}
+
+export const DEFAULT_STRUCTURED_MEMORY: StructuredMemory = {
+  l1_core: {
+    name: '',
+    role: '女朋友',
+    core_personality: [],
+    speech_style: '',
+    relationship_start: ''
+  },
+  l2_important: {
+    preferences: {},
+    key_events: [],
+    taboos: [],
+    milestones: []
+  }
+}
 
 export interface KnowledgeFiles {
   persona: string          // 人设档案（只读，用户手动改）
@@ -91,6 +139,90 @@ export class KnowledgeManager {
     logger.info(`角色 ${this.characterId} 风格学习已更新`)
   }
 
+  // ========== 归档 ==========
+
+  /** 读取归档文件 */
+  readArchive(name: string): string {
+    return this.readFile(`archive_${name}.md`)
+  }
+
+  /** 追加到归档文件 */
+  appendArchive(name: string, content: string): void {
+    const filePath = this.getFilePath(`archive_${name}.md`)
+    const header = `\n---\n> ${new Date().toLocaleDateString('zh-CN')} 归档\n\n`
+    appendFileSync(filePath, header + content + '\n', 'utf-8')
+    this.cache.delete(`archive_${name}.md`)
+  }
+
+  // ========== 结构化记忆 ==========
+
+  /** 读取结构化记忆 */
+  readStructuredMemory(): StructuredMemory {
+    const filePath = this.getFilePath('structured_memory.json')
+    if (!existsSync(filePath)) {
+      return { ...DEFAULT_STRUCTURED_MEMORY }
+    }
+    try {
+      const content = readFileSync(filePath, 'utf-8')
+      return { ...DEFAULT_STRUCTURED_MEMORY, ...JSON.parse(content) }
+    } catch {
+      return { ...DEFAULT_STRUCTURED_MEMORY }
+    }
+  }
+
+  /** 写入结构化记忆 */
+  writeStructuredMemory(memory: StructuredMemory): void {
+    const filePath = this.getFilePath('structured_memory.json')
+    writeFileSync(filePath, JSON.stringify(memory, null, 2), 'utf-8')
+  }
+
+  /** 更新 L2 偏好 */
+  updatePreference(category: string, likes: string[], dislikes: string[]): void {
+    const memory = this.readStructuredMemory()
+    memory.l2_important.preferences[category] = {
+      likes,
+      dislikes,
+      weight: 'high',
+      lastMentioned: new Date().toISOString()
+    }
+    this.writeStructuredMemory(memory)
+  }
+
+  /** 添加重要事件 */
+  addKeyEvent(event: string, details: string, emotionalWeight: 'high' | 'medium' | 'low' = 'medium'): void {
+    const memory = this.readStructuredMemory()
+    memory.l2_important.key_events.push({
+      date: new Date().toISOString().split('T')[0],
+      event,
+      details,
+      emotional_weight: emotionalWeight,
+      lastMentioned: new Date().toISOString()
+    })
+    // 只保留最近 30 个事件
+    if (memory.l2_important.key_events.length > 30) {
+      memory.l2_important.key_events = memory.l2_important.key_events.slice(-30)
+    }
+    this.writeStructuredMemory(memory)
+  }
+
+  /** 添加禁忌 */
+  addTaboo(taboo: string): void {
+    const memory = this.readStructuredMemory()
+    if (!memory.l2_important.taboos.includes(taboo)) {
+      memory.l2_important.taboos.push(taboo)
+      this.writeStructuredMemory(memory)
+    }
+  }
+
+  /** 更新记忆的最后提及时间 */
+  touchMemory(category: string): void {
+    const memory = this.readStructuredMemory()
+    if (memory.l2_important.preferences[category]) {
+      memory.l2_important.preferences[category].lastMentioned = new Date().toISOString()
+      this.writeStructuredMemory(memory)
+    }
+  }
+
   /** 追加聊天记录（每 10 条消息） */
   appendChatLog(entry: string): void {
     const filePath = this.getFilePath('chat_logs.md')
@@ -115,6 +247,12 @@ export class KnowledgeManager {
       if (!existsSync(filePath)) {
         writeFileSync(filePath, content, 'utf-8')
       }
+    }
+
+    // 初始化结构化记忆
+    const structPath = this.getFilePath('structured_memory.json')
+    if (!existsSync(structPath)) {
+      writeFileSync(structPath, JSON.stringify(DEFAULT_STRUCTURED_MEMORY, null, 2), 'utf-8')
     }
   }
 

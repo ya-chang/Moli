@@ -1,0 +1,17 @@
+{
+  "city": "福州",
+  "timestamp": 1784345455212,
+  "data": {
+    "city": "福州",
+    "condition": "多云",
+    "temp": "31°C",
+    "feelsLike": "35°C",
+    "humidity": "湿度71%",
+    "wind": "风速4km/h SSW",
+    "maxTemp": "37°C",
+    "minTemp": "24°C",
+    "uvIndex": "8",
+    "visibility": "10",
+    "description": "⛅ 多云天气，不会太晒"
+  }
+}

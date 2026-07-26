@@ -1,0 +1,17 @@
+{
+  "city": "顺昌",
+  "timestamp": 1784107670986,
+  "data": {
+    "city": "顺昌",
+    "condition": "Thundery outbreaks in nearby",
+    "temp": "32°C",
+    "feelsLike": "40°C",
+    "humidity": "湿度66%",
+    "wind": "风速5km/h ESE",
+    "maxTemp": "33°C",
+    "minTemp": "21°C",
+    "uvIndex": "1",
+    "visibility": "9",
+    "description": "⛈️ 雷阵雨，尽量别出门"
+  }
+}

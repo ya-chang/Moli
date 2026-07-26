@@ -1,20 +1,30 @@
 // src/main/engine/Humanizer.ts
 // "人味儿"注入器 — 让 AI 回复更像真人
+// 灵感来源: Xiaomi-Robotics-U0 的 streaming_generate 流式输出
+// U0源码: xr_u0_ar/generation.py
+// 核心思想: 模拟真人打字节奏，重要消息慢发，简单消息快发
+
+/**
+ * 消息类型（用于打字节奏计算）
+ */
+export type MessageType = 'emotional' | 'factual' | 'flirty' | 'comfort' | 'angry' | 'playful' | 'casual'
 
 export interface HumanizerConfig {
-  emojiOnlyChance: number       // 只回一个表情的概率，默认 0.05
-  longDelayChance: number       // 长延迟概率，默认 0.08
+  emojiOnlyChance: number       // 只回一个表情的概率，默认 0.03
+  longDelayChance: number       // 长延迟概率，默认 0.02
   longDelayRange: [number, number]  // 30-120秒
   recallChance: number          // 撤回概率，默认 0.02
   typoChance: number            // 打错字概率，默认 0.03
+  baseTypingSpeed: number       // 基础打字速度 (ms/字)，默认 50
 }
 
 const DEFAULT_CONFIG: HumanizerConfig = {
-  emojiOnlyChance: 0.05,
-  longDelayChance: 0.08,
+  emojiOnlyChance: 0.03,
+  longDelayChance: 0.02,
   longDelayRange: [30, 120],
   recallChance: 0.02,
-  typoChance: 0.03
+  typoChance: 0.03,
+  baseTypingSpeed: 50
 }
 
 const COMMON_EMOJIS = ['😊', '😂', '❤️', '👍', '🥰', '😍', '😘', '🥺']
@@ -30,6 +40,20 @@ const COMMON_TYPOS: Array<[string, string]> = [
   ['可爱', '可耐'],
 ]
 
+/**
+ * 打字节奏倍率
+ * 不同消息类型的打字速度不同
+ */
+const TYPING_MULTIPLIER: Record<MessageType, number> = {
+  emotional: 1.5,  // 情感消息打字慢（在斟酌措辞）
+  flirty: 1.3,     // 撩人消息稍慢
+  factual: 0.7,    // 事实回答快
+  angry: 0.5,      // 生气时打字快（冲动）
+  playful: 1.1,    // 俏皮消息稍快
+  comfort: 1.2,    // 安慰消息稍慢（温柔）
+  casual: 1.0,     // 正常速度
+}
+
 export class Humanizer {
   private config: HumanizerConfig
 
@@ -37,11 +61,15 @@ export class Humanizer {
     this.config = { ...DEFAULT_CONFIG, ...config }
   }
 
-  process(content: string): {
+  /**
+   * 处理回复内容
+   */
+  process(content: string, messageType: MessageType = 'casual'): {
     content: string
     isEmojiOnly: boolean
     shouldRecall: boolean
     shouldLongDelay: boolean
+    typingDelay: number
   } {
     let processedContent = content
     let isEmojiOnly = false
@@ -49,7 +77,13 @@ export class Humanizer {
     // 偶尔只回一个表情
     if (Math.random() < this.config.emojiOnlyChance) {
       const emoji = COMMON_EMOJIS[Math.floor(Math.random() * COMMON_EMOJIS.length)]
-      return { content: emoji, isEmojiOnly: true, shouldRecall: false, shouldLongDelay: false }
+      return { 
+        content: emoji, 
+        isEmojiOnly: true, 
+        shouldRecall: false, 
+        shouldLongDelay: false,
+        typingDelay: 500
+      }
     }
 
     // 偶尔打错字
@@ -60,22 +94,84 @@ export class Humanizer {
     // 去除重复内容
     processedContent = this.deduplicate(processedContent)
 
+    // 计算打字延迟
+    const typingDelay = this.calculateTypingDelay(processedContent, messageType)
+
     return {
       content: processedContent,
       isEmojiOnly,
       shouldRecall: Math.random() < this.config.recallChance,
-      shouldLongDelay: Math.random() < this.config.longDelayChance
+      shouldLongDelay: Math.random() < this.config.longDelayChance,
+      typingDelay
     }
   }
 
   /**
-   * 去除重复的句子 — 支持精确匹配 + 近似匹配 + 空格分隔重复
+   * 计算打字延迟
+   * 
+   * U0对应: generation.py streaming_generate 的流式输出控制
+   * U0: 文本逐字 yield，图像一次性 yield
+   * 这里: 根据消息类型和长度控制发送节奏
+   * 
+   * @param message 消息内容
+   * @param messageType 消息类型
+   * @returns 延迟时间 (ms)
+   */
+  calculateTypingDelay(message: string, messageType: MessageType): number {
+    const baseDelay = message.length * this.config.baseTypingSpeed
+    
+    // 根据消息类型调整倍率
+    const multiplier = TYPING_MULTIPLIER[messageType] || 1.0
+    
+    // 加随机抖动 (±30%)
+    const jitter = 0.7 + Math.random() * 0.6
+    
+    // 限制在 0.5-5 秒
+    return Math.min(5000, Math.max(500, baseDelay * multiplier * jitter))
+  }
+
+  /**
+   * 消息拆分 — 真人微信聊天会把一段话拆成 2-3 条发
+   * 
+   * @param message 原始消息
+   * @returns 拆分后的消息数组
+   */
+  splitMessage(message: string): string[] {
+    // 如果很短，不拆
+    if (message.length < 15) return [message]
+
+    // 按句号/感叹号/问号拆分
+    const sentences = message.split(/(?<=[。！？~])/g).filter(s => s.trim())
+    if (sentences.length <= 1) return [message]
+
+    // 每 1-2 句合并为一条
+    const chunks: string[] = []
+    for (let i = 0; i < sentences.length; i += 2) {
+      chunks.push(sentences.slice(i, i + 2).join(''))
+    }
+    return chunks
+  }
+
+  /**
+   * 检查是否应该执行真人行为
+   * 
+   * @returns 行为类型
+   */
+  shouldDoHumanAction(): { action: 'normal' | 'emoji_only' | 'long_pause' | null } {
+    const rand = Math.random()
+    if (rand < 0.03) return { action: 'emoji_only' }    // 3% 概率只回 emoji
+    if (rand < 0.05) return { action: 'long_pause' }     // 2% 概率"已读不回"一会
+    return { action: 'normal' }
+  }
+
+  /**
+   * 去除重复的句子
    */
   private deduplicate(content: string): string {
-    // 先处理空格分隔的重复片段（如 "xxx xxx"）
+    // 先处理空格分隔的重复片段
     let processed = this.removeSpaceSeparatedDuplicates(content)
     
-    // 按标点分句（包含中文全角和半角标点、逗号）
+    // 按标点分句
     const sentences = processed.split(/(?<=[。！？.!?\n～…，,、])/)
     const seenKeys: string[] = []
     const result: string[] = []
@@ -86,6 +182,7 @@ export class Humanizer {
         result.push(sentence)
         continue
       }
+      
       // 去掉标点和空格后比较
       const key = trimmed.replace(/[。！？.!?\s，,、～…]/g, '')
       if (!key) {
@@ -118,29 +215,21 @@ export class Humanizer {
 
   /**
    * 去除空格分隔的重复片段
-   * 例如: "我最喜欢秋天啦🍂 我最喜欢秋天啦🍂" → "我最喜欢秋天啦🍂"
-   * 例如: "凉凉的风、凉凉的风、" → "凉凉的风、"
    */
   private removeSpaceSeparatedDuplicates(content: string): string {
-    // 匹配 "xxx xxx" 模式（中间有空格，内容重复，2-80字符）
     let result = content.replace(/(.{2,80}?)\s+\1/g, '$1')
-    
-    // 匹配标点分隔的重复片段（如 "xxx、xxx、"）
-    // 匹配模式：任意2-80字符 + 标点/特殊符号 + 相同内容 + 标点/特殊符号
     result = result.replace(/(.{2,80}?)([。！？.!?\~～…，,、；;：:"""''「」『』【】《》〈〉（）()〔〕\[\]{}])\1\2/g, '$1$2')
-    
-    // 匹配无分隔符的连续重复（如表情符号重复 "(xxx)(xxx)"）
     result = result.replace(/(.{2,40}?)\1+/g, '$1')
     
-    // 如果处理后内容变短了，说明有重复被移除
-    // 递归处理可能的多层重复
     if (result.length < content.length) {
       return this.removeSpaceSeparatedDuplicates(result)
     }
     return result
   }
 
-  /** 计算两个字符串的相似度（基于最长公共子序列） */
+  /**
+   * 计算两个字符串的相似度
+   */
   private similarity(a: string, b: string): number {
     if (a === b) return 1
     if (a.length === 0 || b.length === 0) return 0
@@ -148,28 +237,28 @@ export class Humanizer {
     const shorter = a.length < b.length ? a : b
     const longer = a.length < b.length ? b : a
 
-    // 快速过滤：如果长度差太大，直接返回 0
     if (shorter.length / longer.length < 0.5) return 0
 
-    // 使用编辑距离计算相似度
-    const m = shorter.length
-    const n = longer.length
-    const dp: number[][] = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0))
+    const shorterChars = new Map<string, number>()
+    for (const ch of shorter) {
+      shorterChars.set(ch, (shorterChars.get(ch) || 0) + 1)
+    }
 
-    for (let i = 1; i <= m; i++) {
-      for (let j = 1; j <= n; j++) {
-        if (shorter[i - 1] === longer[j - 1]) {
-          dp[i][j] = dp[i - 1][j - 1] + 1
-        } else {
-          dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1])
-        }
+    let intersection = 0
+    for (const ch of longer) {
+      const count = shorterChars.get(ch)
+      if (count && count > 0) {
+        intersection++
+        shorterChars.set(ch, count - 1)
       }
     }
 
-    const lcs = dp[m][n]
-    return (2 * lcs) / (m + n)
+    return (2 * intersection) / (shorter.length + longer.length)
   }
 
+  /**
+   * 注入错别字
+   */
   private injectTypo(content: string): string {
     const candidates = COMMON_TYPOS.filter(([original]) => content.includes(original))
     if (candidates.length === 0) return content

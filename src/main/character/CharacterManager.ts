@@ -6,6 +6,7 @@ import { join } from 'path'
 import { app } from 'electron'
 import * as yaml from 'yaml'
 import { logger } from '../utils/logger'
+import { PATHS } from '../utils/dataPath'
 import { gentleTemplate } from './templates/gentle'
 import { funnyTemplate } from './templates/funny'
 import { tsundereTemplate } from './templates/tsundere'
@@ -25,6 +26,13 @@ export interface CharacterConfig {
   temperature: number
   maxTokens: number
   proactiveEnabled: boolean
+  // 视觉模型配置
+  visionEnabled?: boolean
+  visionProvider?: string
+  visionModel?: string
+  visionApiKey?: string
+  visionBaseUrl?: string
+  // TTS 配置
   ttsEnabled: boolean
   ttsVoice: string
   ttsVoiceName: string
@@ -51,21 +59,26 @@ const TEMPLATES: CharacterTemplate[] = [
 ]
 
 const getDataRoot = (): string => {
-  if (app.isPackaged) {
-    return join(app.getPath('userData'), 'data', 'characters')
-  }
-  return join(process.cwd(), 'data', 'characters')
+  return PATHS.characters
 }
 
 export class CharacterManager {
   private characters: Map<string, CharacterConfig> = new Map()
   private activeCharacterId: string | null = null
-  private dataRoot: string
+  private initialized = false
+  private activeIdPath: string
 
   constructor() {
-    this.dataRoot = getDataRoot()
+    this.activeIdPath = join(PATHS.base, 'global', 'active_character.json')
+  }
+
+  private ensureInitialized(): void {
+    if (this.initialized) return
+    this.initialized = true
+    logger.info(`[CharacterManager] 初始化, PATHS.characters=${PATHS.characters}, PATHS.base=${PATHS.base}`)
     this.ensureDataRoot()
     this.loadAll()
+    this.loadActiveCharacter()
     this.ensureDefaultCharacter()
   }
 
@@ -87,6 +100,7 @@ export class CharacterManager {
   }
 
   getTemplates(): Array<{ id: string; name: string; description: string }> {
+    this.ensureInitialized()
     return TEMPLATES.map((t) => ({
       id: t.id,
       name: t.name,
@@ -100,6 +114,7 @@ export class CharacterManager {
     avatar: string,
     overrides?: Partial<Pick<CharacterConfig, 'provider' | 'model' | 'temperature' | 'maxTokens' | 'apiKey' | 'baseUrl' | 'persona' | 'traits' | 'catchphrase' | 'proactiveEnabled' | 'ttsEnabled' | 'ttsVoice' | 'ttsVoiceName' | 'ttsModel'>>
   ): CharacterConfig {
+    this.ensureInitialized()
     const template = TEMPLATES.find((t) => t.id === templateId)
     if (!template) {
       throw new Error(`未知模板: ${templateId}`)
@@ -151,6 +166,7 @@ export class CharacterManager {
     ttsVoiceName?: string
     ttsModel?: 'preset' | 'voicedesign' | 'voiceclone'
   }): CharacterConfig {
+    this.ensureInitialized()
     const id = `char_${Date.now()}`
     const now = new Date().toISOString()
 
@@ -181,31 +197,68 @@ export class CharacterManager {
   }
 
   getAll(): CharacterConfig[] {
+    this.ensureInitialized()
     return Array.from(this.characters.values())
   }
 
   get(id: string): CharacterConfig | undefined {
+    this.ensureInitialized()
     return this.characters.get(id)
   }
 
   getActive(): CharacterConfig | null {
+    this.ensureInitialized()
     if (!this.activeCharacterId) return null
     return this.characters.get(this.activeCharacterId) ?? null
   }
 
   getActiveId(): string | null {
+    this.ensureInitialized()
     return this.activeCharacterId
   }
 
   setActive(id: string): void {
+    this.ensureInitialized()
     if (!this.characters.has(id)) {
       throw new Error(`角色不存在: ${id}`)
     }
     this.activeCharacterId = id
+    this.saveActiveCharacter()
     logger.info(`切换角色: id=${id}`)
   }
 
+  /**
+   * 从文件加载上次选中的角色
+   */
+  private loadActiveCharacter(): void {
+    try {
+      if (existsSync(this.activeIdPath)) {
+        const data = JSON.parse(readFileSync(this.activeIdPath, 'utf-8'))
+        if (data.activeCharacterId && this.characters.has(data.activeCharacterId)) {
+          this.activeCharacterId = data.activeCharacterId
+          logger.info(`恢复上次选中角色: ${this.activeCharacterId}`)
+        }
+      }
+    } catch (err) {
+      logger.debug('加载活跃角色失败', err)
+    }
+  }
+
+  /**
+   * 保存当前选中的角色到文件
+   */
+  private saveActiveCharacter(): void {
+    try {
+      const dir = join(PATHS.base, 'global')
+      if (!existsSync(dir)) mkdirSync(dir, { recursive: true })
+      writeFileSync(this.activeIdPath, JSON.stringify({ activeCharacterId: this.activeCharacterId }, null, 2), 'utf-8')
+    } catch (err) {
+      logger.debug('保存活跃角色失败', err)
+    }
+  }
+
   update(id: string, updates: Partial<CharacterConfig>): CharacterConfig {
+    this.ensureInitialized()
     const existing = this.characters.get(id)
     if (!existing) {
       throw new Error(`角色不存在: ${id}`)
@@ -224,6 +277,7 @@ export class CharacterManager {
   }
 
   delete(id: string): void {
+    this.ensureInitialized()
     const character = this.characters.get(id)
     if (!character) {
       throw new Error(`角色不存在: ${id}`)
@@ -235,10 +289,11 @@ export class CharacterManager {
     // 如果删除的是当前活跃角色，清空
     if (this.activeCharacterId === id) {
       this.activeCharacterId = null
+      this.saveActiveCharacter()
     }
 
     // 递归删除角色数据目录
-    const dir = join(this.dataRoot, id)
+    const dir = join(PATHS.characters, id)
     if (existsSync(dir)) {
       this.removeDirRecursive(dir)
     }
@@ -268,7 +323,7 @@ export class CharacterManager {
   private save(character: CharacterConfig): void {
     this.characters.set(character.id, character)
 
-    const dir = join(this.dataRoot, character.id)
+    const dir = join(PATHS.characters, character.id)
     if (!existsSync(dir)) {
       mkdirSync(dir, { recursive: true })
     }
@@ -290,7 +345,7 @@ export class CharacterManager {
   // 后台异步创建角色所需的空目录和初始文件
   private async initCharacterDirs(characterId: string): Promise<void> {
     const dirs = ['memory', 'knowledge', 'learning', 'emotion', 'social']
-    const charDir = join(this.dataRoot, characterId)
+    const charDir = join(PATHS.characters, characterId)
 
     for (const dir of dirs) {
       const dirPath = join(charDir, dir)
@@ -323,14 +378,19 @@ export class CharacterManager {
   }
 
   private loadAll(): void {
-    if (!existsSync(this.dataRoot)) return
+    const dataRoot = PATHS.characters
+    logger.info(`[CharacterManager] loadAll 从 ${dataRoot} 加载`)
+    if (!existsSync(dataRoot)) {
+      logger.warn(`[CharacterManager] 目录不存在: ${dataRoot}`)
+      return
+    }
 
-    const dirs = require('fs').readdirSync(this.dataRoot, { withFileTypes: true })
+    const dirs = require('fs').readdirSync(dataRoot, { withFileTypes: true })
       .filter((d: { isDirectory: () => boolean }) => d.isDirectory())
       .map((d: { name: string }) => d.name)
 
     for (const dir of dirs) {
-      const configPath = join(this.dataRoot, dir, 'config.yaml')
+      const configPath = join(dataRoot, dir, 'config.yaml')
       if (existsSync(configPath)) {
         try {
           const content = readFileSync(configPath, 'utf-8')
@@ -350,8 +410,9 @@ export class CharacterManager {
   }
 
   private ensureDataRoot(): void {
-    if (!existsSync(this.dataRoot)) {
-      mkdirSync(this.dataRoot, { recursive: true })
+    const dataRoot = PATHS.characters
+    if (!existsSync(dataRoot)) {
+      mkdirSync(dataRoot, { recursive: true })
     }
   }
 }

@@ -13,6 +13,7 @@ import { PluginHealthCheck } from './PluginHealthCheck'
 import { PluginEventBus } from './PluginEventBus'
 import { PluginDataShare } from './PluginDataShare'
 import { logger } from '../utils/logger'
+import { PATHS } from '../utils/dataPath'
 
 // ─── 注册表类型 ───
 
@@ -60,7 +61,7 @@ export class PluginManager {
   private dataDir: string
 
   constructor(mainWindow: BrowserWindow, dataDir?: string) {
-    this.dataDir = dataDir || join(process.cwd(), 'data')
+    this.dataDir = dataDir || PATHS.base
     this.pluginDir = join(this.dataDir, 'plugins')
     this.registryPath = join(this.pluginDir, 'installed.json')
 

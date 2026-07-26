@@ -78,6 +78,19 @@ export class TTSService {
   init(apiKey: string): void {
     this.apiKey = apiKey
     this.saveConfig()
+    this.saveConfig()
+  }
+
+  /** 获取当前 API Key（脱敏显示） */
+  getApiKey(): string {
+    return this.apiKey
+  }
+
+  /** 获取脱敏后的 Key */
+  getMaskedApiKey(): string {
+    if (!this.apiKey) return ''
+    if (this.apiKey.length <= 8) return '****'
+    return this.apiKey.slice(0, 4) + '****' + this.apiKey.slice(-4)
   }
 
   isReady(): boolean {

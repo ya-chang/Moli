@@ -1,0 +1,6 @@
+{
+  "weather-plugin": {
+    "api.request": true,
+    "ai.prompt": true
+  }
+}

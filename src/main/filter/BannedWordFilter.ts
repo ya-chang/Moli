@@ -4,6 +4,7 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs'
 import { join } from 'path'
 import { logger } from '../utils/logger'
+import { PATHS } from '../utils/dataPath'
 
 interface BannedWordConfig {
   word: string
@@ -11,7 +12,7 @@ interface BannedWordConfig {
   replacement?: string
 }
 
-const DATA_DIR = join(process.cwd(), 'data', 'global')
+const DATA_DIR = join(PATHS.base, 'global')
 const CONFIG_FILE = join(DATA_DIR, 'banned_words.json')
 
 export class BannedWordFilter {

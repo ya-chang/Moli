@@ -55,6 +55,14 @@ export function registerTTSIPC(
     return { success: true }
   })
 
+  // 获取当前 TTS API Key（脱敏）
+  ipcMain.handle('tts:get-api-key', () => {
+    return {
+      apiKey: ttsService.getMaskedApiKey(),
+      hasKey: ttsService.isReady()
+    }
+  })
+
   // 合成语音
   ipcMain.handle('tts:synthesize', async (_event, params: { text: string; voiceId: string; stylePrompt?: string; modelType?: TTSModelType }) => {
     try {

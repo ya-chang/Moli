@@ -4,6 +4,7 @@
 import { ipcMain } from 'electron'
 import { IPC_CHANNELS } from '../../shared/ipc-channels'
 import { CharacterManager, type CharacterConfig } from '../character/CharacterManager'
+import { getAutoMessageHandlerInstance } from '../auto-message-handler'
 import { logger } from '../utils/logger'
 
 const manager = new CharacterManager()
@@ -98,6 +99,12 @@ export const registerCharacterIPC = (): void => {
   // 删除角色
   ipcMain.handle(IPC_CHANNELS.CHARACTER_DELETE, (_event, params: { id: string }) => {
     try {
+      // 停止该角色的自动消息
+      const amh = getAutoMessageHandlerInstance()
+      if (amh) {
+        amh.stop(params.id)
+        logger.info(`[Character] 停止角色 ${params.id} 的自动消息`)
+      }
       manager.delete(params.id)
       return { success: true }
     } catch (error) {

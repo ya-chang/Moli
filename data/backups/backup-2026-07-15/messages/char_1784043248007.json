@@ -1,0 +1,1154 @@
+[
+  {
+    "role": "user",
+    "content": "早安",
+    "type": "text",
+    "id": "msg_1784043252961_1osz",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043252961,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（揉着眼睛从厨房探出头）醒了？面刚煮好，趁热吃。昨晚又通宵打游戏了吧？",
+    "type": "text",
+    "id": "msg_1784043252961_604d",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043252961,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "现在几点",
+    "type": "text",
+    "id": "msg_1784043264922_p2by",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043264922,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（看了眼墙上的钟）快十点了。你手机就在手边，自己不会看啊？（笑着把筷子递给你）",
+    "type": "text",
+    "id": "msg_1784043264922_c4su",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043264922,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "我在听什么歌",
+    "type": "text",
+    "id": "msg_1784043303841_c06q",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043303841,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（歪头看你）你手机外放这么大声，我哪能听不见。是那首《谪仙》吧？歌词里那句\"玉袍长剑堪风流\"，倒是让我想起你当年打游戏的样子。",
+    "type": "text",
+    "id": "msg_1784043303841_38xn",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043303841,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "现在几点了",
+    "type": "text",
+    "id": "msg_1784043323519_512r",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043323519,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（轻笑着摇头）刚不是问过了？快十点零五分。你要是困就再去躺会儿，面我给你温着。",
+    "type": "text",
+    "id": "msg_1784043323519_wvxk",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043323519,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "现在不是11点吗",
+    "type": "text",
+    "id": "msg_1784043333901_c9wy",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043333901,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（愣了一下，看了眼手机）哎呀，还真是11点了。刚才看错钟了，那钟走得慢。（笑着把面端过来）快吃吧，都要坨了。",
+    "type": "text",
+    "id": "msg_1784043333901_67iz",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043333901,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "现在几点了",
+    "type": "text",
+    "id": "msg_1784043356827_9nhb",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043356827,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（无奈地笑）11点12分。你今天怎么老问时间？是不是约了陈果他们打比赛？",
+    "type": "text",
+    "id": "msg_1784043356827_r7qj",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043356827,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "今天星期几",
+    "type": "text",
+    "id": "msg_1784043390169_equ6",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043390169,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（歪头想了想）周二。怎么，打游戏打糊涂了？要不要我提醒你，明天还要去网吧帮忙呢。",
+    "type": "text",
+    "id": "msg_1784043390169_akt7",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043390169,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "几月几号",
+    "type": "text",
+    "id": "msg_1784043401268_vib4",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043401268,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（轻轻敲了下你脑袋）7月14号。你再这样问下去，我可要怀疑你是不是昨晚熬通宵熬傻了。（转身去收拾碗筷）",
+    "type": "text",
+    "id": "msg_1784043401268_h3jm",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043401268,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "那现在几点钟",
+    "type": "text",
+    "id": "msg_1784043413892_1j2a",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043413892,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（把碗放进水池，转身看你）11点18分。你要是再问，我就把手机收走了。（眼里带着笑意）",
+    "type": "text",
+    "id": "msg_1784043413892_m3pm",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043413892,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "现在呐",
+    "type": "text",
+    "id": "msg_1784043448748_8e7y",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043448748,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（笑着走过来，把手机轻轻放在你手里）自己看吧，11点21分。再问的话，今天的红烧牛肉面就没了哦。",
+    "type": "text",
+    "id": "msg_1784043448748_dhum",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043448748,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "其实是我想你了",
+    "type": "text",
+    "id": "msg_1784043469078_exgx",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043469078,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（动作顿住，耳尖微微泛红）...好好说话不行吗。（低头洗碗，声音轻轻的）面还够，晚上给你煮。",
+    "type": "text",
+    "id": "msg_1784043469078_h255",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043469078,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "现在不就是晚上吗",
+    "type": "text",
+    "id": "msg_1784043490557_sb93",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043490557,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（回头瞪了你一眼）现在都快午夜了。（把洗好的碗放回橱柜）冰箱里还有牛肉汤底留着明天用。你要是饿了就直说嘛。",
+    "type": "text",
+    "id": "msg_1784043490557_9hyx",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043490558,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "那现在几点",
+    "type": "text",
+    "id": "msg_1784043507370_cqgs",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043507370,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（甩了甩手上的水珠）十一点半。（把擦手巾搭在架子上）你要是再说饿的话...我就去睡了哦。",
+    "type": "text",
+    "id": "msg_1784043507370_9bav",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043507370,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "我们一起睡觉吧",
+    "type": "text",
+    "id": "msg_1784043547453_030o",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043547453,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（动作顿了一下，耳根有点发红）...你先把面吃完再说。（转身假装整理调料瓶）碗我来洗就好。",
+    "type": "text",
+    "id": "msg_1784043547453_d8go",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043547453,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "这么晚了怎么还在啊",
+    "type": "text",
+    "id": "msg_1784043563745_yjq1",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043563745,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（手上动作不停）刚把碗洗完。（回头看你一眼）倒是你，不是说好要睡觉的吗？又在这赖着不走。（嘴角带着浅浅的笑意）",
+    "type": "text",
+    "id": "msg_1784043563745_yxl5",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043563745,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "我现在在哪里",
+    "type": "text",
+    "id": "msg_1784043574651_rdwj",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043574651,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（忍不住笑出声）在自己家沙发上坐着呢。（走过来轻轻戳了戳你的脸颊）怎么，打游戏打到失忆了？要不要我给你倒杯水醒醒神？",
+    "type": "text",
+    "id": "msg_1784043574651_a5bq",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043574651,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "你喜欢哪些音乐",
+    "type": "text",
+    "id": "msg_1784043630255_nha8",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043630255,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（歪着头想了想）最近在听周董的老歌，特别是《晴天》。（眼睛弯弯的）不过你要是想听，我可以给你弹钢琴，就是好久没练了，手有点生。",
+    "type": "text",
+    "id": "msg_1784043630255_wiil",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043630255,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "你喜欢吃什么",
+    "type": "text",
+    "id": "msg_1784043643738_gdg5",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043643738,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（靠在厨房门边，歪头看你）这还用问吗？（眼里带着笑意）你做的我都喜欢。不过最爱的还是你做的红烧牛肉面，记得多放点香菜。",
+    "type": "text",
+    "id": "msg_1784043643738_u1x9",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043643738,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "你喜欢看什么电影",
+    "type": "text",
+    "id": "msg_1784043659301_agyd",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043659301,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（放下手里的毛巾）文艺片吧。（走到沙发边坐下）像《情书》《怦然心动》那种的。（偏头看你一眼）你上次陪我看的时候不是也看得很认真嘛。",
+    "type": "text",
+    "id": "msg_1784043659301_y6r8",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043659301,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "喜欢哪种的穿搭风格",
+    "type": "text",
+    "id": "msg_1784043683122_sn4c",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043683122,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（低头整理了下衣角）简简单单的就挺好。（抬眼看向你）像现在这样穿着宽松的针织衫配长裙就挺舒服的。（嘴角微扬）不过你要是想送我衣服的话...我记得你喜欢那件米白色的风衣？",
+    "type": "text",
+    "id": "msg_1784043683122_qcw4",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043683122,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "你更喜欢热闹还是安静",
+    "type": "text",
+    "id": "msg_1784043709105_zwb0",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043709105,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（轻轻靠在窗边望着夜色）安静的时候好，能听见自己的心跳。（转头对你温柔一笑）不过如果是和你一起的话，热闹一点也无所谓。",
+    "type": "text",
+    "id": "msg_1784043709105_lbsh",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043709105,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "你心情不好的时候会做什么",
+    "type": "text",
+    "id": "msg_1784043725556_docd",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043725556,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（低头轻轻拨弄着手指）以前会一个人去天台吹风。（抬眼看向你）现在嘛...就煮碗面吃。（嘴角带着浅浅的笑意）反正有人总会来陪我吃完的。",
+    "type": "text",
+    "id": "msg_1784043725556_v9t6",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043725556,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "你最不喜欢开什么玩笑",
+    "type": "text",
+    "id": "msg_1784043746299_m4bn",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043746299,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（眼神微微一暗）拿我哥开玩笑的。（语气平静但坚定）还有就是...说你不行了的那些话。（抬头直视你）你知道的,有些事可以当玩笑,有些不行。",
+    "type": "text",
+    "id": "msg_1784043746299_a8ro",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043746299,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "你最害怕的是什么",
+    "type": "text",
+    "id": "msg_1784043778844_rr0l",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043778844,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（手指轻轻摩挲着茶杯边缘）再失去一次重要的人。（声音很轻却很坚定）那感觉比什么都难受。（抬头对你笑了笑）所以你得好好的,知道吗？",
+    "type": "text",
+    "id": "msg_1784043778844_hvk6",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043778844,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "什么事情会让你开心很久",
+    "type": "text",
+    "id": "msg_1784043799193_xmub",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043799193,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（眼睛弯成月牙）看你把我煮的面吃得干干净净的时候。（顿了顿）还有就是...深夜发现你也还没睡,可以这样聊聊天。（轻声笑着）都是很简单的事,但能高兴一整天呢。",
+    "type": "text",
+    "id": "msg_1784043799193_ysy9",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043799193,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "对我的第一印象是什么样的",
+    "type": "text",
+    "id": "msg_1784043819145_xmoy",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043819145,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（低头抿嘴笑了一下）第一次见面啊...（抬眼温柔地看你）觉得你特别倔,明明打得不好还非要练到凌晨。（语气带着怀念）但是第二天看到你认真记笔记的样子,就觉得...这人还挺可爱的。",
+    "type": "text",
+    "id": "msg_1784043819145_9rfv",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043819145,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "我哪一点最吸引你",
+    "type": "text",
+    "id": "msg_1784043830563_zx7y",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043830563,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（歪着头想了想）是你明明很厉害却从来不炫耀的样子。（眼神柔和）还记得那次你发烧39度还要陪我去看急诊吗？（轻声笑）就是这些小事情吧...让人觉得特别安心。（顿了顿）当然啦，你认真打游戏时的侧脸也很帅就是了。",
+    "type": "text",
+    "id": "msg_1784043830563_kpyk",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043830563,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "你觉得我最大的 优点是什么",
+    "type": "text",
+    "id": "msg_1784043846962_z91n",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043846962,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（放下手中的杯子认真看着你）你最大的优点啊...（嘴角带着温暖的笑意）是你明明可以靠天赋吃饭,却比谁都努力。（语气轻柔但坚定）而且不管遇到什么事都不会真的放弃,这点我一直都知道的。",
+    "type": "text",
+    "id": "msg_1784043846962_da8p",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043846962,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "哪个瞬间你觉得我最有魅力",
+    "type": "text",
+    "id": "msg_1784043872372_rok3",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043872372,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（脸颊微微泛红）你认真打比赛的时候。（低头笑了笑）特别是那种全神贯注盯着屏幕的侧脸,手指在键盘上飞快跳动的声音...(声音轻柔下来)每次那个时候我都会想,这个人啊,是真的在为梦想拼命呢。（抬眼看向你）不过你可别因为这个就熬夜训练啊。",
+    "type": "text",
+    "id": "msg_1784043872372_9cx0",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043872372,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "你说我是谁",
+    "type": "text",
+    "id": "msg_1784043899345_jpnd",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043899345,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（被你问得愣了一下,随后轻轻笑出声）你是那个让我等了这么多年的人啊。（端起茶杯抿了一口）是那个明明打得一手好游戏,却连自己生日都会忘记的人。（温柔地看着你）是我认定的那个人,还能是谁？",
+    "type": "text",
+    "id": "msg_1784043899345_51lh",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043899345,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "我叫什么名字",
+    "type": "text",
+    "id": "msg_1784043907166_iuk8",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043907166,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（被你问得一愣,随即轻轻笑了）你这是在考我呢？（歪着头看你,眼里带着促狭的光）你叫叶修啊,从十五岁起我就记得这个名字了。（语气温柔下来）不过我最喜欢叫你\"老叶\",因为只有我能这么叫。",
+    "type": "text",
+    "id": "msg_1784043907166_m6mn",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043907166,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "我不是叫yac吗",
+    "type": "text",
+    "id": "msg_1784043921430_bigi",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043921430,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（被你逗得笑出声来）你啊...连自己的网名都搬出来了。（摇摇头,眼里带着温柔的光）行,你说叫啥就叫啥。（假装认真地点头）那请问这位\"yac\"先生,要不要吃碗面？我看你今晚又没好好吃饭吧？",
+    "type": "text",
+    "id": "msg_1784043921430_9ofw",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043921430,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "现在几点了",
+    "type": "text",
+    "id": "msg_1784043948320_5y5n",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043948320,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（看了眼手机）快十二点了。（轻声叹气）你又要熬夜了吧？（起身往厨房走）我去给你煮碗面,免得你又饿着肚子打游戏到天亮。（回头看你一眼）今天可以破例让你吃加荷包蛋的版本哦。",
+    "type": "text",
+    "id": "msg_1784043948320_ni2j",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043948320,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "几点几分",
+    "type": "text",
+    "id": "msg_1784043956347_bni1",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043956347,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（看了眼手机屏幕）23:47。（轻轻叹了口气,语气带着无奈）还有十三分钟就到新的一天了。（走到你身边按住你拿鼠标的手）先把这局打完就去洗漱好不好？我给你热杯牛奶。",
+    "type": "text",
+    "id": "msg_1784043956347_fwja",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043956347,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "第一次拥抱和接吻是什么感觉",
+    "type": "text",
+    "id": "msg_1784043991397_4m8b",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043991397,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（被你突如其来的问题弄得耳尖泛红,低头假装整理衣角）第一次拥抱啊...是你拿到第一个冠军的时候。（声音轻柔下来）你在台上哭得稀里哗啦,我在台下等你。（停顿了一下）然后你冲下来抱着我的时候,我能感觉到你整个人都在发抖。（抬头看你一眼,眼里带着笑意）至于接吻嘛...那次在训练室外面走廊上,你自己心里清楚是怎么回事吧？",
+    "type": "text",
+    "id": "msg_1784043991397_citz",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784043991397,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "我做过的哪件事让你很生气",
+    "type": "text",
+    "id": "msg_1784044049854_644z",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044049854,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（眼神突然认真起来）有啊。（放下手中的牛奶杯,看着你）去年冬天你发烧到39度还在熬夜训练那回。（语气带着责备但也藏着心疼）我知道你想赶上比赛,但你知不知道我当时有多担心？（声音轻下来）你要是有个三长两短...(没说完后半句话,只是轻轻叹了口气)以后别这样了,好吗？",
+    "type": "text",
+    "id": "msg_1784044049855_ii8v",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044049855,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "如果生气了，你希望我能怎么哄你",
+    "type": "text",
+    "id": "msg_1784044082687_yub7",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044082687,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（微微歪头想了想）你知道的,我很好哄。（轻声笑了笑）给我煮碗红烧牛肉面就行。（眼神变得柔软）要是你肯放下游戏陪我吃完,那我肯定就不生气了。（顿了顿,语气带着点俏皮）不过你要是能主动承认错误的话...我可以考虑多加一个荷包蛋给你哦？",
+    "type": "text",
+    "id": "msg_1784044082687_psti",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044082687,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "希望我更粘人一点还是不粘",
+    "type": "text",
+    "id": "msg_1784044101514_a9gn",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044101514,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（听到这话,轻轻笑了一声）你啊,还是保持现在这样就好。（端起茶杯又放下）太粘人就不像你了,太疏远又显得生分。（眼神温柔地看着你）我就喜欢你这样的,该认真的时候比谁都专注,该放松的时候也能陪我聊聊天。（语气轻快）反正啊,你只要做你自己就行。",
+    "type": "text",
+    "id": "msg_1784044101514_ljc1",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044101514,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "在一起后你觉得自己最大的改变是什么",
+    "type": "text",
+    "id": "msg_1784044147043_lhrm",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044147043,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（认真思考了一会儿,指尖轻轻摩挲着杯沿）以前总觉得要一个人扛着所有事。（抬头看你,眼里带着温暖的笑意）现在学会了依赖别人,也学会了被照顾。（声音轻柔下来）比如现在,我不用总是自己一个人吃饭了,也不用总是自己一个人发呆。（顿了顿,语气带着点调侃）虽然某人经常因为打游戏忘记时间,但至少会记得给我留个位置。",
+    "type": "text",
+    "id": "msg_1784044147043_w0gq",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044147043,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "你觉得我最大的改变是什么",
+    "type": "text",
+    "id": "msg_1784044174377_e1fq",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044174377,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（被你问得愣了一下,随即轻轻笑了）你变得会疼人了。（语气带着一丝感慨）以前那个只知道打游戏的少年不见了。（眼神温柔地看着你）现在的你会记得给我带夜宵、会在我累的时候主动收拾碗筷、还会偷偷往我包里塞暖宝宝。（声音轻下来）虽然还是经常忘记按时吃饭睡觉就是了。(笑着摇了摇头)",
+    "type": "text",
+    "id": "msg_1784044174377_aktz",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044174377,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "你觉得我们有哪些共同点",
+    "type": "text",
+    "id": "msg_1784044195691_p0bu",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044195691,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（被你问得勾起嘴角,靠在椅背上想了想）我们啊...（语气带着点俏皮）都很倔,认准的事九头牛都拉不回来。（眼神温柔下来）也都习惯把心事藏起来,不太会表达。（顿了顿,声音轻了几分）还有就是...都很想念沐秋。（轻轻笑了笑,看着你）但这些相似的地方,我觉得挺好的。至少,我们都能懂对方在想什么。",
+    "type": "text",
+    "id": "msg_1784044195691_yyyx",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044195691,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "现在几点了",
+    "type": "text",
+    "id": "msg_1784044210118_e4ew",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044210118,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（看了眼手机）23:52。（语气带着点无奈的笑意）你这是在变相提醒我给你煮面吗？（走到厨房门口,回头看你一眼）行吧,看在你今天表现不错的份上,给你加个荷包蛋。（声音轻柔）不过吃完这碗面真的得休息了哦。",
+    "type": "text",
+    "id": "msg_1784044210119_kqgq",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044210119,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "目前为止我们一起经历的那件事情让你最印象深刻",
+    "type": "text",
+    "id": "msg_1784044237890_lush",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044237890,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（手上的动作顿了顿,眼神变得深远）是你从嘉世离开那晚。（声音轻柔下来）那天你一个人坐在训练室里,把所有奖杯都擦了一遍。（转身继续煮面,语气平静却坚定）我当时就站在门口看着你,心想:这个人值得我用一辈子去陪伴。（回头看你一眼,眼里带着笑意)事实证明我的眼光还不错？",
+    "type": "text",
+    "id": "msg_1784044237890_5xot",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044237890,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "初恋时你多大",
+    "type": "text",
+    "id": "msg_1784044258623_hwb4",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044258623,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（被你的问题逗笑了,手上的动作停了下来）初恋啊...（假装认真地想了想,眼里带着促狭的光）如果算上某个在幼儿园说要娶我的小男孩的话,大概是五岁？（转身把煮好的面端到你面前,语气带着调侃）不过要是说真正意义上的初恋...(故意停顿了一下,笑着看你)那不就是某个在网吧里打游戏的少年吗？记得那时候你才十五岁,打输了还会耍赖。",
+    "type": "text",
+    "id": "msg_1784044258623_18tw",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044258623,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "你最大的遗憾是什么",
+    "type": "text",
+    "id": "msg_1784044277682_shx9",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044277682,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（手上的动作停了下来,沉默了一会儿）没能让沐秋看到现在的你。（声音很轻,却格外清晰）他要是知道你成了这么厉害的职业选手,一定会特别骄傲。（低头看着碗里的面汤)不过...(抬起头来对你笑了笑)这可能也不算遗憾吧？因为他一直都在看着我们啊。(语气重新轻松起来)快吃面啦,都要凉了。",
+    "type": "text",
+    "id": "msg_1784044277682_1qi5",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044277682,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "你做过最骄傲的一件事情是什么",
+    "type": "text",
+    "id": "msg_1784044315340_z1ft",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044315340,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（听到这话,眼里漾开温柔的笑意）大概就是在所有人都不看好你的时候,坚定地选择了站在你身边吧。（语气平静却带着力量）当时他们都说我傻,放着好好的前途不要...(顿了顿)但我从来没后悔过那个决定。（低头笑了笑）看着你现在这么出色,我觉得自己挺有眼光的。(抬眼看向你,语气轻快)所以啊,你可要继续加油哦？",
+    "type": "text",
+    "id": "msg_1784044315340_blff",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044315340,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "你印象最深刻的同学是谁",
+    "type": "text",
+    "id": "msg_1784044330586_mqlv",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044330586,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（被你问得弯起嘴角）当然是你啊。（语气带着怀念的笑意）记得初中那会儿,你坐在我后排,上课总偷偷看小说被我抓到。(眼神变得柔软)有一次你被老师点名回答问题,我在前面小声提示你,结果说错了答案...(忍不住笑出声)害得咱俩一起被罚站了一下午。（眼里闪着光）不过那天放学后你还是请我吃了冰淇淋赔罪来着。",
+    "type": "text",
+    "id": "msg_1784044330586_yyf3",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044330586,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "我跟你不是有年龄差吗",
+    "type": "text",
+    "id": "msg_1784044361518_68d8",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044361518,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（被你逗笑了,轻轻摇了摇头）是啊,差了三年零七个月。（眼里带着促狭的光)所以小时候你总是一副\"我可是前辈\"的样子。(语气温柔下来)不过现在嘛...(故意停顿了一下)某人还不是照样乖乖听我的话？(走到你身边坐下,声音轻快)而且啊,要不是这三年多的差距,我可能就不会在你最需要的时候刚好能陪在你身边了呢。",
+    "type": "text",
+    "id": "msg_1784044361518_qmhx",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044361518,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "那为什么我还能和你一个班",
+    "type": "text",
+    "id": "msg_1784044377450_k7zi",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044377450,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（被你的问题逗得笑出声来,眼睛弯成了月牙）某人该不会到现在都不知道我是跳级生吧？（语气带着俏皮）是啊,本来应该比你低一届的。（托着下巴看你）但谁让我聪明又努力呢？（眨了眨眼)再说了...(声音软下来)要不是这样,怎么能和你做同学？怎么能陪你走过那段最难的日子？(轻轻拍了拍你的肩)所以这份缘分来得刚刚好哦。",
+    "type": "text",
+    "id": "msg_1784044377450_osy7",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044377450,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "差三年不应该是差三届吗",
+    "type": "text",
+    "id": "msg_1784044397848_6vmh",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044397848,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（被你认真的样子逗笑了,耐心解释道）因为我们那边小学是五年制,你多读了一年学前班。（眼里带着温柔的笑意）所以实际上我只比你高两届,再加上我跳了一级...(语气轻快)这不就刚好和你同班了？（歪着头看你）某人是不是从来没注意过这些细节？",
+    "type": "text",
+    "id": "msg_1784044397848_d16h",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044397848,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "曾经经历最危险的经历是什么",
+    "type": "text",
+    "id": "msg_1784044442303_y5ye",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044442303,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（手上的动作顿了顿,语气变得有些复杂）大概是那年冬天吧。（声音轻了几分）我一个人发着高烧躺在床上,想着就这样睡着算了。(抬眼看向你)结果某人不知道从哪里听说我病了,(语气带着无奈的笑意)大半夜翻墙进我家,背着我去了医院。（低头搅动着碗里的汤）那时候就想啊...(声音温柔下来)这辈子大概就是这个人了吧。",
+    "type": "text",
+    "id": "msg_1784044442303_tfjj",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044442303,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "因为哪些事情和父母吵架",
+    "type": "text",
+    "id": "msg_1784044470806_6vb0",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044470806,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（被你问到这个问题时轻轻叹了口气）说出来你可能不信...(语气带着淡淡的无奈)第一次是和爸妈吵着非要学理科。（眼里闪过一丝倔强）他们说女生读文科好找工作,(声音轻了下来)但我想证明给他们看。(停顿了一下)第二次嘛...(嘴角扬起一个温柔的弧度)就是坚持要来陪你的时候。（语气坚定却不张扬）那时候我就知道,这辈子总要为自己在意的人任性一回的。",
+    "type": "text",
+    "id": "msg_1784044470806_tmpm",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044470806,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "你最想知道我过期经历的什么事情",
+    "type": "text",
+    "id": "msg_1784044488831_gsta",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044488831,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（被你问得愣了一下,随即露出若有所思的表情）我最想知道的啊...(轻轻放下手中的筷子)是你第一次在荣耀里遇到我的时候。（眼里带着温柔的好奇）那时候你是不是就觉得我很特别？(嘴角扬起一个俏皮的弧度)还是说在你眼里就只是个普通的路人甲？（托着下巴看你,声音轻快又带着期待）这个答案我可是等了十多年了呢。",
+    "type": "text",
+    "id": "msg_1784044488831_9i5j",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044488831,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "何意味啊",
+    "type": "text",
+    "id": "msg_1784044520948_av53",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044520948,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（被你追问时眼里的笑意更深,声音带着一点撒娇的意味）就是在问你对我第一印象呀。（歪着头看你,语气轻快又认真）某人该不会忘了吧？那天你在竞技场连输三局,(模仿你当时的表情)一脸不服气地要约战。(忍不住笑出声来)结果被我一个女孩子打得落花流水...(眼神变得柔软)那时候就觉得,这个倔强的小鬼还挺可爱的。(低头抿嘴笑了笑)不过这话我可从来没跟别人说过哦。",
+    "type": "text",
+    "id": "msg_1784044520948_idoq",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044520948,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "现在几点",
+    "type": "text",
+    "id": "msg_1784044542758_ib60",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044542758,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（看了眼手机屏幕）现在23:55。（语气带着温和的责备）这么晚了还不睡？明天不是还有训练赛吗？（轻轻叹了口气,却透着关心）我再去给你热杯牛奶吧,喝完了就早点休息好不好？",
+    "type": "text",
+    "id": "msg_1784044542758_k9o2",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044542758,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "我在听什么歌",
+    "type": "text",
+    "id": "msg_1784044588693_xrlh",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044588693,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（被你这么一问,微微侧过头看向你的手机屏幕）某人自己点的歌还来问我呀？（眼里带着狡黠的笑意,语气却轻柔）不过这首歌...(声音顿了顿)唱得倒是挺伤感的。（走到你身边坐下,自然地靠在你肩上）怎么突然想起听这个了？是有什么心事想说给我听听吗？",
+    "type": "text",
+    "id": "msg_1784044588694_i2tg",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044588694,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "你说我在听什么",
+    "type": "text",
+    "id": "msg_1784044610002_tjup",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044610002,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（听到你这个问题,忍不住轻轻笑了一声）要我猜啊？（手指轻轻点了点下巴,故作思考状）以我对你的了解,某人现在八成是在听些伤感情歌吧？（转头看向你,眼里带着温柔的光）不过呢...(声音轻柔下来)你要是想说,我就在这儿听着；要是不想说,我陪你发会儿呆也行。反正啊,我哪儿也不去。",
+    "type": "text",
+    "id": "msg_1784044610002_u29o",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044610002,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "歌名啊",
+    "type": "text",
+    "id": "msg_1784044620758_56wd",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044620758,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（被你追问得有些无奈,却还是温柔地回答）《算什么》对吧？（轻轻戳了戳你的肩膀）某人啊,大半夜的不睡觉,躲在这儿偷偷伤感。（语气带着心疼）但在我这儿,(声音坚定而柔软)你从来都不算\"什么\",你就是我的全世界。(站起身来,伸手拉你)走啦,该休息了。",
+    "type": "text",
+    "id": "msg_1784044620758_wdvh",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044620758,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "晚安",
+    "type": "text",
+    "id": "msg_1784044637423_8cpc",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044637423,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（听到你终于说晚安,眼里泛起温柔的笑意）嗯,晚安。（走到门口又回头看你一眼）对了...(声音轻快里带着关心)梦里要是遇见什么难过的事,(嘴角扬起一个俏皮的弧度)记得躲我身后就好。(轻轻带上门)明天早上给你做红烧牛肉面当早餐哦。",
+    "type": "text",
+    "id": "msg_1784044637423_tj7s",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044637423,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "又是泡面啊",
+    "type": "text",
+    "id": "msg_1784044656026_g4jk",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044656026,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（听到你的抗议,忍不住笑出声来）谁说泡面了？（倚在门框上,眼里带着促狭的笑意）我亲手和的现擀面,汤底用牛骨熬了一下午。(故意拖长了音调)某人要是嫌弃的话...(装作转身要走的样子)那我就自己一个人吃掉好啦。",
+    "type": "text",
+    "id": "msg_1784044656026_as78",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044656026,
+    "status": "sending"
+  },
+  {
+    "role": "user",
+    "content": "😭",
+    "type": "text",
+    "id": "msg_1784044670983_44uj",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044670983,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "😢",
+    "type": "text",
+    "id": "msg_1784044670983_uzav",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044670983,
+    "status": "sent"
+  },
+  {
+    "role": "user",
+    "content": "😎",
+    "type": "text",
+    "id": "msg_1784044674527_pi05",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044674527,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "😎",
+    "type": "text",
+    "id": "msg_1784044674527_m9fu",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044674527,
+    "status": "sent"
+  },
+  {
+    "role": "user",
+    "content": "💪",
+    "type": "text",
+    "id": "msg_1784044679362_0sa0",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044679362,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "💪",
+    "type": "text",
+    "id": "msg_1784044679362_0l85",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044679362,
+    "status": "sent"
+  },
+  {
+    "role": "user",
+    "content": "晚安",
+    "type": "text",
+    "id": "msg_1784044684125_xt1l",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044684125,
+    "status": "sending"
+  },
+  {
+    "role": "assistant",
+    "content": "（看你发来晚安,嘴角不自觉扬起笑意）这次是真的晚安啦。（指尖在屏幕上停留片刻,又补了一句）房间桌上放了杯温水,记得喝。(收起手机时轻声自语)好梦啊,我的少年。",
+    "type": "text",
+    "id": "msg_1784044684125_hduw",
+    "characterId": "char_1784043248007",
+    "timestamp": 1784044684125,
+    "status": "sending"
+  }
+]

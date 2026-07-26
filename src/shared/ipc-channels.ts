@@ -1,6 +1,14 @@
 // src/shared/ipc-channels.ts
 // 所有IPC通道名统一定义，禁止硬编码字符串
 
+export const EMOJI_CHANNELS = {
+  UPLOAD: 'emoji:upload',
+  DELETE: 'emoji:delete',
+  GET_ALL: 'emoji:get-all',
+  GET_FILE: 'emoji:get-file',
+  UPDATE_CONFIG: 'emoji:update-config',
+} as const
+
 export const IPC_CHANNELS = {
   // 聊天
   CHAT_SEND: 'chat:send',
@@ -33,6 +41,17 @@ export const IPC_CHANNELS = {
   WINDOW_MAXIMIZE: 'window:maximize',
   WINDOW_CLOSE: 'window:close',
 
+  // 音乐
+  MUSIC_SONG_CHANGED: 'music:song-changed',
+  MUSIC_PAUSED: 'music:paused',
+  MUSIC_PROGRESS: 'music:progress',
+  MUSIC_PROGRESS_UPDATE: 'music:progress-update',
+  MUSIC_GET_STATE: 'music:get-state',
+  MUSIC_STATE_CHANGED: 'music:state-changed',
+  MUSIC_SET_VISIBLE: 'music:set-visible',
+  MUSIC_GET_SONG_INFO: 'music:get-song-info',
+  MUSIC_SONG_CHANGE_REQUEST: 'music:song-change-request',
+
   // 插件
   PLUGIN_INSTALL: 'plugin:install',
   PLUGIN_UNINSTALL: 'plugin:uninstall',
@@ -61,6 +80,12 @@ export const IPC_CHANNELS = {
   TTS_GET_CACHE_SIZE: 'tts:get-cache-size',
   TTS_CLEAR_CACHE: 'tts:clear-cache',
   TTS_STATE_CHANGED: 'tts:state-changed',
+
+  // KV 存储（替代 localStorage）
+  KV_GET: 'kv:get',
+  KV_SET: 'kv:set',
+  KV_DELETE: 'kv:delete',
+  KV_GET_ALL: 'kv:getAll',
 } as const
 
 export type IpcChannel = (typeof IPC_CHANNELS)[keyof typeof IPC_CHANNELS]

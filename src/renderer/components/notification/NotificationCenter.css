@@ -1,0 +1,305 @@
+/* src/renderer/components/notification/NotificationCenter.css */
+/* 灵动岛通知中心样式 */
+
+.notification-center {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  pointer-events: auto;
+  animation: islandPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.notification-center.closing {
+  animation: islandDismiss 0.3s ease-in forwards;
+}
+
+@keyframes islandPop {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+}
+
+@keyframes islandDismiss {
+  from {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px) scale(0.9);
+  }
+}
+
+/* 胶囊样式 */
+.notification-capsule {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px 8px 8px;
+  min-width: 280px;
+  max-width: 400px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+  transition: all 0.2s ease;
+}
+
+.notification-capsule:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.15);
+}
+
+.capsule-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.capsule-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.capsule-avatar span {
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.capsule-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.capsule-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 2px;
+}
+
+.capsule-message {
+  font-size: 12px;
+  color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.capsule-badge {
+  min-width: 20px;
+  height: 20px;
+  background: #ff3b30;
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+}
+
+/* 展开面板样式 */
+.notification-expanded {
+  width: 360px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+  animation: expandIn 0.3s cubic-bezier(0.34, 1.2, 0.64, 1);
+}
+
+@keyframes expandIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.expanded-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.expanded-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.expanded-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.expanded-avatar span {
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.expanded-info {
+  flex: 1;
+}
+
+.expanded-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.expanded-time {
+  font-size: 12px;
+  color: #999;
+}
+
+.expanded-close {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 50%;
+  font-size: 18px;
+  color: #999;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.expanded-close:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: #333;
+}
+
+.expanded-body {
+  padding: 16px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+}
+
+.expanded-footer {
+  padding: 0 16px 16px;
+}
+
+.expanded-action {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.expanded-action:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* 历史消息 */
+.expanded-history {
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 8px 0;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.history-item:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.history-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: #666;
+  flex-shrink: 0;
+}
+
+.history-content {
+  font-size: 12px;
+  color: #999;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 深色模式 */
+[data-theme="dark"] .notification-capsule,
+[data-theme="dark"] .notification-expanded {
+  background: rgba(40, 40, 40, 0.95);
+}
+
+[data-theme="dark"] .capsule-name,
+[data-theme="dark"] .expanded-name {
+  color: #e0e0e0;
+}
+
+[data-theme="dark"] .capsule-message,
+[data-theme="dark"] .expanded-body {
+  color: #999;
+}
+
+[data-theme="dark"] .expanded-close {
+  background: rgba(255, 255, 255, 0.1);
+  color: #999;
+}
+
+[data-theme="dark"] .expanded-close:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+[data-theme="dark"] .history-name {
+  color: #aaa;
+}
+
+[data-theme="dark"] .history-content {
+  color: #777;
+}

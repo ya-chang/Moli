@@ -1,0 +1,23 @@
+{
+  "state": {
+    "happiness": 70,
+    "sadness": 12,
+    "anger": 0,
+    "anxiety": 5,
+    "affection": 50,
+    "intimacy": 30,
+    "trust": 40,
+    "energy": 80,
+    "missLevel": 36.81147222222222,
+    "patience": 80,
+    "currentMood": "neutral",
+    "lastInteraction": "2026-07-23T09:13:23.722Z",
+    "conversationStreak": 6
+  },
+  "emotionalMemory": [],
+  "reconciliation": {
+    "isFighting": false,
+    "lastFightTime": null,
+    "lastReconciliationTime": null
+  }
+}

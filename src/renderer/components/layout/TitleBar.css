@@ -19,25 +19,6 @@
   gap: 8px;
 }
 
-.titlebar__back-btn {
-  width: 32px;
-  height: 32px;
-  border: none;
-  background: transparent;
-  font-size: 20px;
-  cursor: pointer;
-  border-radius: 4px;
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.titlebar__back-btn:active {
-  background: var(--bg-secondary);
-}
-
 .titlebar__name {
   font-size: var(--font-size-lg);
   font-weight: 500;
@@ -191,6 +172,10 @@
 
 .titlebar__btn--tts-active {
   color: var(--primary-color);
+}
+
+.titlebar__btn--vision-active {
+  color: #f39c12;
 }
 
 .titlebar__btn--close:hover {

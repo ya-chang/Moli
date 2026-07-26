@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Moli Notification</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      overflow: hidden;
+      font-family: "Microsoft YaHei UI", "Segoe UI", sans-serif;
+    }
+    
+    .notification-root {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 10px; /* 左右边距防止被裁剪 */
+    }
+    
+    /* 胶囊样式 */
+    .capsule {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 20px 12px 12px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 24px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+      animation: islandPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(-20px) scale(0.9);
+    }
+    
+    .capsule.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    
+    .capsule.hide {
+      animation: islandDismiss 0.3s ease-in forwards;
+    }
+    
+    @keyframes islandPop {
+      from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    
+    @keyframes islandDismiss {
+      from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+      to {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.9);
+      }
+    }
+    
+    .capsule:hover {
+      transform: scale(1.02);
+      box-shadow: 0 6px 28px rgba(0, 0, 0, 0.15);
+    }
+    
+    .capsule-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    
+    .capsule-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .capsule-avatar span {
+      font-size: 20px;
+    }
+    
+    .capsule-content {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .capsule-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 2px;
+    }
+    
+    .capsule-message {
+      font-size: 12px;
+      color: #666;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 300px;
+    }
+  </style>
+</head>
+<body>
+  <div class="notification-root" id="app">
+    <div class="capsule" id="capsule">
+      <div class="capsule-avatar">
+        <span id="avatar-text">M</span>
+      </div>
+      <div class="capsule-content">
+        <div class="capsule-name" id="name">Moli</div>
+        <div class="capsule-message" id="message">测试消息</div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    const { ipcRenderer } = require('electron');
+    const capsule = document.getElementById('capsule');
+    const avatarText = document.getElementById('avatar-text');
+    const nameEl = document.getElementById('name');
+    const messageEl = document.getElementById('message');
+    
+    let hideTimer = null;
+    
+    // 监听显示通知事件
+    ipcRenderer.on('notification:show', (event, data) => {
+      const { characterName, content, avatar, settings } = data;
+      
+      // 应用样式设置
+      if (settings) {
+        capsule.style.width = `${settings.screenWidth || 400}px`;
+        capsule.style.minHeight = `${settings.screenHeight || 80}px`;
+        capsule.style.fontSize = `${settings.screenFontSize || 14}px`;
+        capsule.style.color = settings.screenFontColor || '#1a1a1a';
+        capsule.style.background = settings.screenBgColor || 'rgba(255, 255, 255, 0.95)';
+        
+        // 更新子元素样式
+        nameEl.style.fontSize = `${(settings.screenFontSize || 14) - 1}px`;
+        nameEl.style.color = settings.screenFontColor || '#1a1a1a';
+        messageEl.style.fontSize = `${(settings.screenFontSize || 14) - 2}px`;
+        messageEl.style.color = settings.screenFontColor || '#666';
+      }
+      
+      // 更新头像 — 优先用应用图标
+      const avatarEl = document.querySelector('.capsule-avatar');
+      if (avatarEl) {
+        if (data.iconDataUrl) {
+          avatarEl.innerHTML = `<img src="${data.iconDataUrl}" alt="${characterName}">`;
+        } else {
+          avatarEl.innerHTML = `<span>${characterName.charAt(0)}</span>`;
+        }
+      }
+      
+      // 更新内容
+      nameEl.textContent = characterName;
+      messageEl.textContent = content;
+      
+      // 显示动画
+      capsule.classList.remove('hide');
+      capsule.classList.add('show');
+      
+      // 自动隐藏（使用设置中的时间）
+      if (hideTimer) clearTimeout(hideTimer);
+      const stayDuration = (settings?.screenStaySeconds || 5) * 1000;
+      hideTimer = setTimeout(() => {
+        capsule.classList.remove('show');
+        capsule.classList.add('hide');
+        setTimeout(() => {
+          ipcRenderer.send('notification:hidden');
+        }, 300);
+      }, stayDuration);
+    });
+    
+    // 监听隐藏事件
+    ipcRenderer.on('notification:hide', () => {
+      capsule.classList.remove('show');
+      capsule.classList.add('hide');
+    });
+    
+    // 点击关闭
+    capsule.addEventListener('click', () => {
+      ipcRenderer.send('notification:clicked');
+      capsule.classList.remove('show');
+      capsule.classList.add('hide');
+      setTimeout(() => {
+        ipcRenderer.send('notification:hidden');
+      }, 300);
+    });
+  </script>
+</body>
+</html>

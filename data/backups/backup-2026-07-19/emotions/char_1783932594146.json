@@ -1,0 +1,29 @@
+{
+  "state": {
+    "happiness": 90,
+    "sadness": 10,
+    "anger": 0,
+    "anxiety": 5,
+    "affection": 55,
+    "intimacy": 33,
+    "trust": 40,
+    "energy": 80,
+    "missLevel": 20,
+    "patience": 80,
+    "currentMood": "happy",
+    "lastInteraction": "2026-07-13T11:53:24.475Z",
+    "conversationStreak": 5
+  },
+  "emotionalMemory": [
+    {
+      "event": "收到爱意表达",
+      "impact": 20,
+      "timestamp": "2026-07-13T09:14:38.174Z"
+    }
+  ],
+  "reconciliation": {
+    "isFighting": false,
+    "lastFightTime": null,
+    "lastReconciliationTime": null
+  }
+}

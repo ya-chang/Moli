@@ -24,13 +24,62 @@ const BG_PRESETS = [
   { id: 'dark', label: '深色', value: '#1A1A1A' },
 ]
 
+// 弹窗设置接口
+interface NotificationSettings {
+  // 主动消息时间
+  morningHour: number
+  morningMinute: number
+  nightHour: number
+  nightMinute: number
+  // 应用内弹窗
+  appWidth: number
+  appHeight: number
+  appFontSize: number
+  appFontColor: string
+  appBgColor: string
+  appStaySeconds: number
+  // 屏幕外弹窗
+  screenEnabled: boolean
+  screenWidth: number
+  screenHeight: number
+  screenFontSize: number
+  screenFontColor: string
+  screenBgColor: string
+  screenStaySeconds: number
+}
+
+const DEFAULT_NOTIFICATION_SETTINGS: NotificationSettings = {
+  morningHour: 8,
+  morningMinute: 0,
+  nightHour: 23,
+  nightMinute: 0,
+  appWidth: 400,
+  appHeight: 80,
+  appFontSize: 14,
+  appFontColor: '#1a1a1a',
+  appBgColor: 'rgba(255, 255, 255, 0.95)',
+  appStaySeconds: 5,
+  screenEnabled: true,
+  screenWidth: 400,
+  screenHeight: 80,
+  screenFontSize: 14,
+  screenFontColor: '#1a1a1a',
+  screenBgColor: 'rgba(255, 255, 255, 0.95)',
+  screenStaySeconds: 5,
+}
+
 export function SettingsPanel({ onClose }: SettingsPanelProps): React.JSX.Element {
   const [theme, setTheme] = useState('default')
   const [fontSize, setFontSize] = useState(14)
   const [chatBg, setChatBg] = useState('#FFFFFF')
-  const [dataDir, setDataDir] = useState('F:\\mimo\\xm\\data\\app')
+  const [dataDir, setDataDir] = useState('加载中...')
   const [exportStatus, setExportStatus] = useState('')
+  const [sourceUrl, setSourceUrl] = useState('')
+  const [notificationSettings, setNotificationSettings] = useState<NotificationSettings>(DEFAULT_NOTIFICATION_SETTINGS)
 
+  // 不再隐藏WebView，设置面板本身有高z-index覆盖
+  const [sourceStatus, setSourceStatus] = useState('')
+  const [sourceLoading, setSourceLoading] = useState(false)
   const [importStatus, setImportStatus] = useState('')
   const [showPlugins, setShowPlugins] = useState(false)
   const currentSession = useChatSessionStore((s) => s.currentSession)
@@ -38,26 +87,42 @@ export function SettingsPanel({ onClose }: SettingsPanelProps): React.JSX.Elemen
   const bgInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    const saved = localStorage.getItem('app-settings')
-    if (saved) {
-      const settings = JSON.parse(saved)
-      const t = settings.theme || 'default'
-      setTheme(t)
-      document.documentElement.setAttribute('data-theme', t)
-      setFontSize(settings.fontSize || 14)
+    // 从文件系统加载设置
+    window.electronAPI?.invoke('settings:load').then((result: any) => {
+      if (result) {
+        const t = result.theme || 'default'
+        setTheme(t)
+        document.documentElement.setAttribute('data-theme', t)
+        setFontSize(result.fontSize || 14)
+        if (result.sourceUrl) setSourceUrl(result.sourceUrl)
+        if (result.notificationSettings) {
+          setNotificationSettings({ ...DEFAULT_NOTIFICATION_SETTINGS, ...result.notificationSettings })
+        }
+      }
+    }).catch(() => {})
 
-    }
+    // 加载实际数据目录路径
+    window.electronAPI?.invoke('data:getPath').then((result: any) => {
+      if (result && typeof result === 'string') {
+        setDataDir(result)
+      }
+    }).catch(() => {})
+
     if (currentSession?.id) {
       const bg = chatBgStore.getBg(currentSession.id)
       setChatBg(bg)
     }
+    // 检查音源状态
+    window.electronAPI?.invoke('music:sourceStatus').then((result) => {
+      const r = result as { loaded: boolean; info?: { name?: string } }
+      if (r.loaded) {
+        setSourceStatus(`已加载: ${r.info?.name || '未知音源'}`)
+      }
+    }).catch(() => {})
   }, [currentSession?.id])
 
   const saveSettings = (updates: Record<string, unknown>): void => {
-    const saved = localStorage.getItem('app-settings')
-    const settings = saved ? JSON.parse(saved) : {}
-    const newSettings = { ...settings, ...updates }
-    localStorage.setItem('app-settings', JSON.stringify(newSettings))
+    window.electronAPI?.invoke('settings:save', updates).catch(() => {})
   }
 
   const handleThemeChange = (newTheme: string): void => {
@@ -70,6 +135,29 @@ export function SettingsPanel({ onClose }: SettingsPanelProps): React.JSX.Elemen
     setFontSize(size)
     document.documentElement.style.setProperty('--font-size-base', `${size}px`)
     saveSettings({ fontSize: size })
+  }
+
+  const handleNotificationSettingsChange = (updates: Partial<NotificationSettings>): void => {
+    const newSettings = { ...notificationSettings, ...updates }
+    setNotificationSettings(newSettings)
+    saveSettings({ notificationSettings: newSettings })
+    // 通知主进程更新设置
+    window.electronAPI?.send('notification:settings-updated', newSettings)
+    // 如果更新了早安/晚安时间，通知调度器
+    if (updates.morningHour !== undefined || updates.morningMinute !== undefined) {
+      window.electronAPI?.send('scheduler:update-time', {
+        triggerId: 'morning',
+        hour: newSettings.morningHour,
+        minute: newSettings.morningMinute
+      })
+    }
+    if (updates.nightHour !== undefined || updates.nightMinute !== undefined) {
+      window.electronAPI?.send('scheduler:update-time', {
+        triggerId: 'night',
+        hour: newSettings.nightHour,
+        minute: newSettings.nightMinute
+      })
+    }
   }
 
   const handleChatBgChange = (bg: string): void => {
@@ -126,6 +214,30 @@ export function SettingsPanel({ onClose }: SettingsPanelProps): React.JSX.Elemen
       setImportStatus('导入失败')
     }
     setTimeout(() => setImportStatus(''), 3000)
+  }
+
+  const handleLoadSource = async (): Promise<void> => {
+    if (!sourceUrl.trim()) return
+    setSourceLoading(true)
+    setSourceStatus('加载中（可能需要10-30秒）...')
+    try {
+      const result = await window.electronAPI?.invoke('music:loadSource', sourceUrl.trim()) as {
+        success: boolean
+        data?: { name?: string }
+        sources?: Record<string, unknown>
+        error?: string
+      }
+      if (result.success) {
+        const sourceNames = result.sources ? Object.keys(result.sources).join(', ') : ''
+        setSourceStatus(`已加载: ${result.data?.name || '未知音源'}${sourceNames ? ` (${sourceNames})` : ''}`)
+        saveSettings({ sourceUrl: sourceUrl.trim() })
+      } else {
+        setSourceStatus(`失败: ${result.error || '未知错误'}`)
+      }
+    } catch (err) {
+      setSourceStatus(`失败: ${err instanceof Error ? err.message : '通信错误'}`)
+    }
+    setSourceLoading(false)
   }
 
   return (
@@ -206,6 +318,8 @@ export function SettingsPanel({ onClose }: SettingsPanelProps): React.JSX.Elemen
             />
           </div>
 
+          {/* 通知设置已移到通讯录对象详情页面 */}
+
           {/* 数据管理 */}
           <div className="settings-section">
             <h4>数据管理</h4>
@@ -266,7 +380,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps): React.JSX.Elemen
 
           {/* 关于 / 反馈 */}
           <div className="settings-section settings-about">
-            <h4>关于拟恋</h4>
+            <h4>关于 Moli</h4>
             <div className="settings-about__info">
               <div className="settings-about__item">
                 <span className="settings-about__label">版本</span>
@@ -296,7 +410,7 @@ export function SettingsPanel({ onClose }: SettingsPanelProps): React.JSX.Elemen
               </div>
             </div>
             <p className="settings-about__desc">
-              感谢使用拟恋！如果你有任何建议或问题，欢迎通过邮箱联系我们。
+              感谢使用 Moli！如果你有任何建议或问题，欢迎通过邮箱联系我们。
             </p>
           </div>
         </div>

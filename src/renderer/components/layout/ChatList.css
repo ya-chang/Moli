@@ -12,14 +12,6 @@
   position: relative;
 }
 
-/* 移动端全屏 */
-@media (max-width: 768px) {
-  .chat-list {
-    width: 100%;
-    border-right: none;
-  }
-}
-
 /* 搜索栏 + 新建按钮 */
 .chat-list__header {
   display: flex;
