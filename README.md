@@ -11,7 +11,7 @@
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&style=flat-square)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?logo=typescript&style=flat-square)](https://www.typescriptlang.org/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-1.4.0-blue?style=flat-square)](https://github.com/ya-chang/nilian/releases)
+[![Version](https://img.shields.io/badge/Version-1.7.0-blue?style=flat-square)](https://github.com/ya-chang/Moli/releases)
 [![Platform](https://img.shields.io/badge/Platform-Windows-0078D6?logo=windows&style=flat-square)](https://nilian.ysf.pw)
 
 [官网 Website](https://nilian.ysf.pw) · [下载 Download](https://nilian.ysf.pw) · [使用指南 Guide](https://nilian.ysf.pw)
@@ -137,7 +137,7 @@
 
 ```bash
 # Clone / 克隆仓库
-git clone https://github.com/ya-chang/nilian.git
+git clone https://github.com/ya-chang/Moli.git
 cd nilian
 
 # Install / 安装依赖
